@@ -50,11 +50,11 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   );
 }
 
-function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
+function TableCell({ className, style, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-2 py-[3px] leading-tight align-middle tabular-nums", className)}
-      style={{ fontSize: '11px' }}
+      className={cn("px-2 py-[2px] leading-none align-middle tabular-nums", className)}
+      style={{ fontSize: '11px', ...style }}
       {...props}
     />
   );
