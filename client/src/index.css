@@ -91,6 +91,18 @@ body {
   margin: 0;
 }
 
+/* iOS Safari: pin html+body so there is no document-level scroll surface.
+   Inner containers use their own overflow-y:auto for scrollable regions. */
+html,
+body {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+
 /* Prevent iOS zoom on input focus (exclude counter-display — it's already 40px so no zoom) */
 input:not(.counter-display),
 select,

@@ -48,7 +48,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
 
   return (
     <div
-      className={`h-screen flex flex-col items-center overflow-hidden px-4 ${mode === "home" ? "justify-center" : "justify-start pt-safe"}`}
+      className={`h-[100dvh] flex flex-col items-center overflow-hidden touch-none px-4 ${mode === "home" ? "justify-center" : "justify-start pt-safe"}`}
       style={{ background: 'var(--surface-0)' }}
     >
       {mode === "home" && (

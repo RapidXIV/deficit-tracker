@@ -42,7 +42,7 @@ export function LogHistoryTable({ logs, onDeleteDay }: LogHistoryTableProps) {
   }
 
   return (
-    <div className='flex-1 overflow-y-auto border border-[var(--border-subtle)]'>
+    <div className='flex-1 overflow-y-auto touch-pan-y border border-[var(--border-subtle)]'>
       <Table>
         <TableHeader>
           <TableRow className='border-b-0'>

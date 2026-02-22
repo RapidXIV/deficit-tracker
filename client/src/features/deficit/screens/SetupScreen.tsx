@@ -56,7 +56,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
   }
 
   return (
-    <div className="h-screen flex flex-col max-w-md mx-auto px-4 overflow-hidden pt-safe pb-safe" style={{ background: 'var(--surface-0)' }}>
+    <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe pb-safe" style={{ background: 'var(--surface-0)' }}>
       <h1
         className="text-center font-bold uppercase mb-6"
         style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.12em' }}

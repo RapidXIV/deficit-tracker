@@ -11,7 +11,7 @@ interface LogScreenProps {
 
 export function LogScreen({ logsWithEstWeight, onBack, onDeleteDay }: LogScreenProps) {
   return (
-    <div className="h-screen flex flex-col max-w-md mx-auto pt-safe pb-safe">
+    <div className="h-[100dvh] flex flex-col max-w-md mx-auto pt-safe pb-safe">
       {/* Header */}
       <div className="flex items-center px-3 h-11 flex-shrink-0 border-b border-[var(--border-subtle)]">
         <Button variant="ghost" size="icon" onClick={onBack} aria-label="Back">

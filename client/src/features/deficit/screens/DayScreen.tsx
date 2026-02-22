@@ -82,7 +82,7 @@ export function DayScreen({
     'var(--text-muted)';
 
   return (
-    <div className="h-screen flex flex-col max-w-md mx-auto px-4 overflow-hidden pt-safe pb-safe">
+    <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe pb-safe">
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between h-9 flex-shrink-0">
         <Button variant="ghost" size="icon" onClick={onLogout} aria-label="Log out">
