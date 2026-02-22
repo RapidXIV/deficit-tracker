@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node -e:*)",
+      "Bash(__NEW_LINE_995d0dd0bc3eadf2__ echo \"\")",
+      "Bash(curl:*)",
+      "Bash(__NEW_LINE_bfed94c68cfaa26d__ echo \"\")",
+      "Bash(__NEW_LINE_15b655fb0f882273__ echo \"\")",
+      "Bash(__NEW_LINE_56be10967d1eabb1__ echo \"\")",
+      "Bash(__NEW_LINE_adce8b7ef809d1e9__ echo \"\")",
+      "Bash(__NEW_LINE_602130e090439c08__ echo \"\")",
+      "Bash(__NEW_LINE_acfe1a9661935a79__ echo \"\")",
+      "Bash(__NEW_LINE_f41e9fded938c190__ echo \"\")",
+      "Bash(__NEW_LINE_f602eeed27878a0b__ echo \"\")",
+      "Bash(__NEW_LINE_72bad806c4babd96__ echo \"\")",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/lib/queryClient.ts:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/hooks/useSettings.ts:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/hooks/useLogs.ts:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/hooks/useDeficitStats.ts:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/components/ui/button.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/components/ui/input.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/components/ui/dialog.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/components/ui/alert-dialog.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/components/ui/table.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/components/CalorieCounter.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/components/LogHistoryTable.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/screens/SetupScreen.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/features/deficit/screens/LogScreen.tsx:*)",
+      "Bash(/c/Storage/Software/deficit-tracker/client/src/pages/landing.tsx:*)",
+      "Bash(npx vite build)",
+      "Bash(netstat:*)",
+      "Bash(__NEW_LINE_eac28823b5b12b09__ echo \"\")",
+      "Bash(__NEW_LINE_684da18c1d19d273__ echo \"\")",
+      "Bash(git init:*)"
+    ]
+  }
+}
