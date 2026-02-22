@@ -116,6 +116,47 @@ input[type="number"] {
   padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 16px), 24px);
 }
 
+/* Tally counter buttons (–  / +) */
+.tally-btn {
+  width: 72px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 100ms ease, border-color 150ms ease, color 150ms ease;
+}
+.tally-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+}
+.tally-btn:active {
+  background: var(--surface-3);
+  transform: scale(0.97);
+  transition: background 100ms ease, border-color 150ms ease, color 150ms ease, transform 50ms ease;
+}
+
+/* Tally counter center number */
+.counter-display {
+  font-size: var(--type-counter);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  min-width: 120px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+}
+
 /* Streak ember — slow opacity oscillation, like a pilot light */
 @keyframes ember-pulse {
   0%, 100% { opacity: 1; }
