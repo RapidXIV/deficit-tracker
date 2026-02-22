@@ -33,6 +33,8 @@ export function Landing({ onAuthenticated }: LandingProps) {
         { username: username.trim(), password }
       );
       qc.setQueryData(["/api/auth/me"], user);
+      qc.invalidateQueries({ queryKey: ["/api/settings"] });
+      qc.invalidateQueries({ queryKey: ["/api/logs"] });
       onAuthenticated();
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Something went wrong");

@@ -117,7 +117,6 @@ export function Home() {
       currentDate={currentDate}
       settings={settings}
       stats={stats}
-      logs={logs}
       caloriesIn={caloriesIn}
       caloriesOut={caloriesOut}
       todayDeficit={todayDeficit}
