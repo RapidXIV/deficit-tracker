@@ -64,22 +64,12 @@ export async function recalculateDayNumbers(userId: string): Promise<void> {
     .where(eq(dailyLogs.userId, userId))
     .orderBy(asc(dailyLogs.date));
 
-  console.log(
-    "[recalculate] before:",
-    logs.map((l) => ({ date: l.date, dayNumber: l.dayNumber }))
-  );
-
   for (let i = 0; i < logs.length; i++) {
     await db
       .update(dailyLogs)
       .set({ dayNumber: i + 1 })
       .where(and(eq(dailyLogs.userId, userId), eq(dailyLogs.date, logs[i].date)));
   }
-
-  console.log(
-    "[recalculate] after:",
-    logs.map((l, i) => ({ date: l.date, dayNumber: i + 1 }))
-  );
 }
 
 export async function upsertLog(
