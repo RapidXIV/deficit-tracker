@@ -21,11 +21,13 @@ const RadioGroupItem = forwardRef<
   <RadioGroupPrimitive.Item
     ref={ref}
     className={cn(
-      "h-8 w-14 rounded-md border border-white/25 font-mono text-xs uppercase tracking-widest",
-      "data-[state=checked]:border-white data-[state=checked]:text-white",
-      "text-muted-foreground transition-colors",
+      "h-8 w-14 rounded-[var(--radius-sm)] border border-[var(--border-medium)] font-mono uppercase tracking-[0.08em]",
+      "text-[var(--text-secondary)]",
+      "data-[state=checked]:border-[var(--text-primary)] data-[state=checked]:text-[var(--text-primary)]",
+      "transition-colors duration-150",
       className
     )}
+    style={{ fontSize: 'var(--type-label)' }}
     {...props}
   />
 ));

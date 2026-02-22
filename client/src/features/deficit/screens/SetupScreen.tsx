@@ -56,8 +56,11 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col max-w-md mx-auto px-4 py-6">
-      <h1 className="text-center text-sm font-bold uppercase tracking-widest mb-6">
+    <div className="min-h-screen flex flex-col max-w-md mx-auto px-4 py-6" style={{ background: 'var(--surface-0)' }}>
+      <h1
+        className="text-center font-bold uppercase mb-6"
+        style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.12em' }}
+      >
         Deficit Tracker
       </h1>
 
@@ -113,7 +116,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
               onChange={(e) => setHeightFt(e.target.value)}
               className="w-20"
             />
-            <span className="text-xs text-muted-foreground">ft</span>
+            <span className="font-medium uppercase" style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.08em' }}>ft</span>
             <Input
               type="number"
               inputMode="numeric"
@@ -122,7 +125,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
               onChange={(e) => setHeightIn(e.target.value)}
               className="w-20"
             />
-            <span className="text-xs text-muted-foreground">in</span>
+            <span className="font-medium uppercase" style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.08em' }}>in</span>
           </div>
         </div>
 
@@ -139,14 +142,14 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
         </div>
 
         {error && (
-          <p className="text-xs text-red-400 tracking-wide">{error}</p>
+          <p className="text-xs" style={{ color: 'var(--accent-negative)' }}>{error}</p>
         )}
 
         <div className="flex-1" />
 
         <Button
           type="submit"
-          variant="outline"
+          variant="default"
           size="full"
           disabled={submitting}
         >
