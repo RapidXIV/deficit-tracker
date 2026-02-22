@@ -56,7 +56,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col max-w-md mx-auto px-4 py-6" style={{ background: 'var(--surface-0)' }}>
+    <div className="h-screen flex flex-col max-w-md mx-auto px-4 overflow-hidden pt-safe pb-safe" style={{ background: 'var(--surface-0)' }}>
       <h1
         className="text-center font-bold uppercase mb-6"
         style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.12em' }}
@@ -64,7 +64,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
         Deficit Tracker
       </h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 flex-1">
         {/* Goal weight */}
         <div className="flex flex-col gap-1">
           <Label htmlFor="goal-weight">Goal (lbs)</Label>
@@ -75,6 +75,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
             placeholder="180"
             value={goalWeight}
             onChange={(e) => setGoalWeight(e.target.value)}
+            className="h-8"
           />
         </div>
 
@@ -88,6 +89,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
             placeholder="210"
             value={startWeight}
             onChange={(e) => setStartWeight(e.target.value)}
+            className="h-8"
           />
         </div>
 
@@ -101,6 +103,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
             placeholder="30"
             value={age}
             onChange={(e) => setAge(e.target.value)}
+            className="h-8"
           />
         </div>
 
@@ -114,7 +117,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
               placeholder="5"
               value={heightFt}
               onChange={(e) => setHeightFt(e.target.value)}
-              className="w-20"
+              className="w-20 h-8"
             />
             <span className="font-medium uppercase" style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.08em' }}>ft</span>
             <Input
@@ -123,7 +126,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
               placeholder="10"
               value={heightIn}
               onChange={(e) => setHeightIn(e.target.value)}
-              className="w-20"
+              className="w-20 h-8"
             />
             <span className="font-medium uppercase" style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', letterSpacing: '0.08em' }}>in</span>
           </div>
