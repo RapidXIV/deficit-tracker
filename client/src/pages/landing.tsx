@@ -47,7 +47,10 @@ export function Landing({ onAuthenticated }: LandingProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: 'var(--surface-0)' }}>
+    <div
+      className={`min-h-screen flex flex-col items-center px-4 ${mode === "home" ? "justify-center" : "justify-start pt-safe"}`}
+      style={{ background: 'var(--surface-0)' }}
+    >
       {mode === "home" && (
         <div className="w-full max-w-xs flex flex-col items-center gap-8">
           {/* ── Wordmark ── */}
