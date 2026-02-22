@@ -47,14 +47,30 @@ export function Landing({ onAuthenticated }: LandingProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: 'var(--surface-0)' }}>
       {mode === "home" && (
         <div className="w-full max-w-xs flex flex-col items-center gap-8">
+          {/* ── Wordmark ── */}
           <div className="text-center">
-            <h1 className="text-4xl font-bold uppercase tracking-widest mb-1">
+            <h1
+              className="font-bold uppercase"
+              style={{
+                fontSize: 'var(--type-display)',
+                color: 'var(--text-primary)',
+                letterSpacing: '0.2em',
+                lineHeight: 1,
+              }}
+            >
               DEFICIT
             </h1>
-            <p className="text-xs text-muted-foreground tracking-widest">
+            <p
+              className="font-medium uppercase mt-2"
+              style={{
+                fontSize: 'var(--type-label)',
+                color: 'var(--text-secondary)',
+                letterSpacing: '0.12em',
+              }}
+            >
               caloric deficit tracker
             </p>
           </div>
@@ -96,7 +112,14 @@ export function Landing({ onAuthenticated }: LandingProps) {
             ← Back
           </button>
 
-          <h2 className="text-sm font-bold uppercase tracking-widest mb-6 text-center">
+          <h2
+            className="font-bold uppercase text-center mb-6"
+            style={{
+              fontSize: 'var(--type-label)',
+              color: 'var(--text-secondary)',
+              letterSpacing: '0.12em',
+            }}
+          >
             {mode === "signin" ? "Sign In" : "Sign Up"}
           </h2>
 
@@ -123,7 +146,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
             </div>
 
             {error && (
-              <p className="text-xs text-red-400">{error}</p>
+              <p className="text-xs" style={{ color: 'var(--accent-negative)' }}>{error}</p>
             )}
 
             <Button

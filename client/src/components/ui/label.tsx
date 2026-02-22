@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
 const Label = forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({ className, style, ...props }, ref) => (
   <LabelPrimitive.Root
     ref={ref}
     className={cn(
-      "text-xs uppercase tracking-widest text-muted-foreground font-mono",
+      "font-medium uppercase font-mono tracking-[0.08em]",
       className
     )}
+    style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', ...style }}
     {...props}
   />
 ));
