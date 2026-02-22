@@ -72,8 +72,14 @@ export function DayScreen({
   const liveTotalDeficit =
     stats.totalDeficitAchieved - (storedToday?.deficit ?? 0) + todayDeficit;
 
-  const totalIsPositive = liveTotalDeficit >= 0;
-  const todayIsPositive = todayDeficit >= 0;
+  const todayColor =
+    todayDeficit > 0 ? 'var(--accent-positive)' :
+    todayDeficit < 0 ? 'var(--accent-negative)' :
+    'var(--text-muted)';
+  const totalColor =
+    liveTotalDeficit > 0 ? 'var(--accent-positive)' :
+    liveTotalDeficit < 0 ? 'var(--accent-negative)' :
+    'var(--text-muted)';
 
   return (
     <div className="h-screen flex flex-col max-w-md mx-auto px-5 overflow-hidden pt-safe pb-safe">
@@ -194,27 +200,44 @@ export function DayScreen({
 
       {/* ── Today's Deficit ── */}
       <div className="mt-2 flex-shrink-0 text-center">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground mb-0.5">
+        <p
+          className="font-medium uppercase tracking-[0.08em] mb-1"
+          style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+        >
           Today's Deficit
         </p>
         <p
-          className={`text-3xl font-bold tabular-nums leading-tight ${
-            todayIsPositive ? "text-green-400" : "text-red-400"
-          }`}
+          className="font-bold tabular-nums leading-tight tracking-[-0.02em]"
+          style={{ fontSize: 'var(--type-stat)', color: todayColor }}
         >
           {formatDeficit(todayDeficit)}
         </p>
       </div>
 
       {/* ── Total Deficit ── */}
-      <div className="mt-2 flex-shrink-0 border border-white/20 rounded-lg py-2 text-center">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground mb-0.5">
+      <div
+        className="mt-2 flex-shrink-0 p-4 text-center"
+        style={{
+          background: 'var(--surface-1)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 'var(--radius-lg)',
+        }}
+      >
+        <p
+          className="font-medium uppercase tracking-[0.08em]"
+          style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+        >
           Total Deficit
         </p>
+        {/* Micro-detail: 40px hairline rule — adds gravitas */}
+        <div className="w-10 h-px mx-auto my-2" style={{ background: 'var(--border-medium)' }} />
         <p
-          className={`text-4xl font-bold tabular-nums leading-tight ${
-            totalIsPositive ? "text-green-400" : "text-red-400"
-          }`}
+          className="font-bold tabular-nums leading-tight tracking-[-0.02em]"
+          style={{
+            fontSize: 'var(--type-display)',
+            color: totalColor,
+            textDecoration: liveTotalDeficit === 0 ? 'line-through' : 'none',
+          }}
         >
           {formatDeficit(liveTotalDeficit)}
         </p>
