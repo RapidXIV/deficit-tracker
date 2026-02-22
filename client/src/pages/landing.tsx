@@ -48,8 +48,8 @@ export function Landing({ onAuthenticated }: LandingProps) {
 
   return (
     <div
-      className={`h-[100dvh] flex flex-col items-center overflow-hidden touch-none px-4 ${mode === "home" ? "justify-center" : "justify-start pt-safe"}`}
-      style={{ background: 'var(--surface-0)' }}
+      className={`h-[100dvh] flex flex-col items-center overflow-hidden touch-none px-4 justify-start`}
+      style={{ background: 'var(--surface-0)', paddingTop: mode === "home" ? '25dvh' : 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
     >
       {mode === "home" && (
         <div className="w-full max-w-xs flex flex-col items-center gap-8">
