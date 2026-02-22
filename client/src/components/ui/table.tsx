@@ -2,12 +2,10 @@ import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-x-auto">
-      <table
-        className={cn("w-full caption-bottom font-mono", className)}
-        {...props}
-      />
-    </div>
+    <table
+      className={cn("w-full caption-bottom font-mono", className)}
+      {...props}
+    />
   );
 }
 
