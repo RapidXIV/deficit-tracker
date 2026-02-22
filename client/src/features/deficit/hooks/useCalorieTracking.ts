@@ -55,7 +55,7 @@ export function useCalorieTracking({
   }, [date, isLogsLoaded]);
 
   const save = useCallback(
-    async (cIn: number, cOut: number) => {
+    async (cIn: number, cOut: number, completed = false) => {
       if (!settings) return;
 
       const revision = ++revisionRef.current;
@@ -75,6 +75,7 @@ export function useCalorieTracking({
           caloriesOut: cOut,
           deficit,
           dayNumber,
+          completed,
         });
         if (revision === revisionRef.current) {
           qc.invalidateQueries({ queryKey: ["/api/logs"] });
@@ -130,7 +131,7 @@ export function useCalorieTracking({
 
   const finishDay = useCallback(async () => {
     clearTimeout(debounceRef.current);
-    await save(cInRef.current, cOutRef.current);
+    await save(cInRef.current, cOutRef.current, true);
     onDayFinished();
   }, [save, onDayFinished]);
 

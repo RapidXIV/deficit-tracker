@@ -4,6 +4,7 @@ import {
   varchar,
   integer,
   real,
+  boolean,
   timestamp,
   jsonb,
   index,
@@ -56,6 +57,7 @@ export const dailyLogs = pgTable("daily_logs", {
   caloriesOut: integer("calories_out").notNull().default(0),
   deficit: integer("deficit").notNull().default(0),
   dayNumber: integer("day_number").notNull(),
+  completed: boolean("completed").notNull().default(false),
 });
 
 // ─── Zod schemas (for API input validation) ────────────────────────────────────

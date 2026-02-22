@@ -32,6 +32,11 @@ export function Home() {
   );
   const { stats, dynamicTDEE } = useDeficitStats(settings, completedLogs);
 
+  const isCurrentDayCompleted = useMemo(
+    () => logs.some((l) => l.date === currentDate && l.completed),
+    [logs, currentDate]
+  );
+
   // Log history shows all logs including today's autosaved entry
   const logsWithEstWeight = useMemo(
     () =>
@@ -125,6 +130,7 @@ export function Home() {
       onCaloriesInChange={updateCaloriesIn}
       onCaloriesOutChange={updateCaloriesOut}
       onFinishDay={finishDay}
+      isCurrentDayCompleted={isCurrentDayCompleted}
       onNavigateDate={setCurrentDate}
       onShowHistory={() => setShowLog(true)}
       onLogout={async () => {

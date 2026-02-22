@@ -102,6 +102,7 @@ apiRouter.post("/logs", async (req, res) => {
     caloriesOut: z.number().int().min(0),
     deficit: z.number().int(),
     dayNumber: z.number().int().min(1),
+    completed: z.boolean(),
   });
 
   const parsed = schema.safeParse(req.body);

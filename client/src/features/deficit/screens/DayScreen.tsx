@@ -25,13 +25,12 @@ import { CalorieCounter } from "../components/CalorieCounter";
 import { formatDateNav, formatDeficit } from "@/lib/date-utils";
 import { addDays, subtractDays } from "@/lib/date-utils";
 import type { DeficitStats } from "@/lib/calculations";
-import type { UserSettings, DailyLog } from "@shared/schema";
+import type { UserSettings } from "@shared/schema";
 
 interface DayScreenProps {
   currentDate: string;
   settings: UserSettings;
   stats: DeficitStats;
-  logs: DailyLog[];
   caloriesIn: number;
   caloriesOut: number;
   todayDeficit: number;
@@ -40,6 +39,7 @@ interface DayScreenProps {
   onCaloriesInChange: (v: number) => void;
   onCaloriesOutChange: (v: number) => void;
   onFinishDay: () => void;
+  isCurrentDayCompleted: boolean;
   onNavigateDate: (date: string) => void;
   onShowHistory: () => void;
   onLogout: () => void;
@@ -50,7 +50,6 @@ export function DayScreen({
   currentDate,
   settings,
   stats,
-  logs,
   caloriesIn,
   caloriesOut,
   todayDeficit,
@@ -59,6 +58,7 @@ export function DayScreen({
   onCaloriesInChange,
   onCaloriesOutChange,
   onFinishDay,
+  isCurrentDayCompleted,
   onNavigateDate,
   onShowHistory,
   onLogout,
@@ -76,18 +76,13 @@ export function DayScreen({
     setFlashKey(k => k + 1);
   }, [todayDeficit]);
 
-  // Live total: replace stored today's deficit with live value
-  const storedToday = logs.find((l) => l.date === currentDate);
-  const liveTotalDeficit =
-    stats.totalDeficitAchieved - (storedToday?.deficit ?? 0) + todayDeficit;
-
   const todayColor =
     todayDeficit > 0 ? 'var(--accent-positive)' :
     todayDeficit < 0 ? 'var(--accent-negative)' :
     'var(--text-muted)';
   const totalColor =
-    liveTotalDeficit > 0 ? 'var(--accent-positive)' :
-    liveTotalDeficit < 0 ? 'var(--accent-negative)' :
+    stats.totalDeficitAchieved > 0 ? 'var(--accent-positive)' :
+    stats.totalDeficitAchieved < 0 ? 'var(--accent-negative)' :
     'var(--text-muted)';
 
   return (
@@ -252,10 +247,10 @@ export function DayScreen({
           style={{
             fontSize: 'var(--type-display)',
             color: totalColor,
-            textDecoration: liveTotalDeficit === 0 ? 'line-through' : 'none',
+            textDecoration: stats.totalDeficitAchieved === 0 ? 'line-through' : 'none',
           }}
         >
-          {formatDeficit(liveTotalDeficit)}
+          {formatDeficit(stats.totalDeficitAchieved)}
         </p>
       </div>
 
@@ -265,7 +260,7 @@ export function DayScreen({
       {/* ── Bottom buttons ── */}
       <div className="flex flex-col gap-1.5 flex-shrink-0 pb-1">
         <Button variant="default" size="full" onClick={onFinishDay}>
-          Finish Day
+          {isCurrentDayCompleted ? "Update Day" : "Finish Day"}
         </Button>
         <Button variant="outline" size="full" onClick={onShowHistory}>
           History
