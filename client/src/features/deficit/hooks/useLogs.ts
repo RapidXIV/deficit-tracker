@@ -13,7 +13,7 @@ export function useLogs() {
   const resetDayMutation = useMutation({
     mutationFn: (date: string) =>
       apiRequest("DELETE", `/api/logs/${date}`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["/api/logs"] }),
+    onSettled: () => qc.invalidateQueries({ queryKey: ["/api/logs"] }),
   });
 
   const resetAllMutation = useMutation({
