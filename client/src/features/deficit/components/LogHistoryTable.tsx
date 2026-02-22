@@ -91,7 +91,7 @@ export function LogHistoryTable({ logs, onDeleteDay }: LogHistoryTableProps) {
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <button
-                      className='opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 text-[var(--text-muted)] hover:text-[var(--accent-negative)]'
+                      className='opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-0.5 text-[var(--text-muted)] hover:text-[var(--accent-negative)]'
                       aria-label='Delete day'
                     >
                       <X className='h-3 w-3' />

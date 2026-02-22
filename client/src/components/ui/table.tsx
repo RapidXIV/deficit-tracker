@@ -41,10 +41,10 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        "py-[6px] px-2 text-left uppercase tracking-[0.06em] font-medium",
+        "py-[3px] px-2 text-left uppercase tracking-[0.06em] font-medium",
         className
       )}
-      style={{ fontSize: 'var(--type-micro)', color: 'var(--text-secondary)' }}
+      style={{ fontSize: '9px', color: 'var(--text-secondary)' }}
       {...props}
     />
   );
@@ -53,8 +53,8 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
 function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-2 py-2 align-middle tabular-nums", className)}
-      style={{ fontSize: 'var(--type-body)' }}
+      className={cn("px-2 py-[3px] leading-tight align-middle tabular-nums", className)}
+      style={{ fontSize: '11px' }}
       {...props}
     />
   );
