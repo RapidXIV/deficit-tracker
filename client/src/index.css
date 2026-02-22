@@ -178,3 +178,13 @@ input[type="number"] {
   display: inline-block;
   animation: ember-pulse 3s ease-in-out infinite;
 }
+
+/* Today's Deficit — brief opacity breath when the value changes */
+@keyframes deficit-flash {
+  0%   { opacity: 1; }
+  40%  { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+.deficit-flash {
+  animation: deficit-flash 200ms ease;
+}

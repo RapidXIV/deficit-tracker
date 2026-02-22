@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { LogOut, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,6 +66,15 @@ export function DayScreen({
 }: DayScreenProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [resetConfirm, setResetConfirm] = useState(false);
+
+  // Deficit flash: increment key on every change after initial mount so the
+  // CSS animation restarts from scratch (key change forces DOM remount)
+  const isFirstRender = useRef(true);
+  const [flashKey, setFlashKey] = useState(0);
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    setFlashKey(k => k + 1);
+  }, [todayDeficit]);
 
   // Live total: replace stored today's deficit with live value
   const storedToday = logs.find((l) => l.date === currentDate);
@@ -213,7 +222,8 @@ export function DayScreen({
           Today's Deficit
         </p>
         <p
-          className="font-bold tabular-nums leading-tight tracking-[-0.02em]"
+          key={flashKey}
+          className={`font-bold tabular-nums leading-tight tracking-[-0.02em]${flashKey > 0 ? ' deficit-flash' : ''}`}
           style={{ fontSize: 'var(--type-stat)', color: todayColor }}
         >
           {formatDeficit(todayDeficit)}
