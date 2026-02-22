@@ -75,7 +75,7 @@ export function useCalorieTracking({
           caloriesOut: cOut,
           deficit,
           dayNumber,
-          completed,
+          completed: existing?.completed || completed,
         });
         if (revision === revisionRef.current) {
           qc.invalidateQueries({ queryKey: ["/api/logs"] });
