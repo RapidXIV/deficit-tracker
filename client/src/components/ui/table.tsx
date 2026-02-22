@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-auto">
+    <div className="w-full overflow-x-auto">
       <table
-        className={cn("w-full caption-bottom text-xs font-mono", className)}
+        className={cn("w-full caption-bottom font-mono", className)}
         {...props}
       />
     </div>
@@ -14,7 +14,10 @@ function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) 
 function TableHeader({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
-      className={cn("sticky top-0 bg-black border-b border-white/15", className)}
+      className={cn(
+        "sticky top-0 z-10 bg-[var(--surface-2)] border-b border-[var(--border-medium)]",
+        className
+      )}
       {...props}
     />
   );
@@ -27,7 +30,10 @@ function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectio
 function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn("border-b border-white/10 hover:bg-white/5", className)}
+      className={cn(
+        "border-b border-[var(--border-subtle)] hover:bg-[var(--surface-1)] transition-colors duration-100",
+        className
+      )}
       {...props}
     />
   );
@@ -37,9 +43,10 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        "h-8 px-2 text-left text-xs uppercase tracking-widest text-muted-foreground font-mono font-normal",
+        "py-[6px] px-2 text-left uppercase tracking-[0.06em] font-medium",
         className
       )}
+      style={{ fontSize: 'var(--type-micro)', color: 'var(--text-secondary)' }}
       {...props}
     />
   );
@@ -48,7 +55,8 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
 function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-2 py-2 align-middle text-xs tabular-nums", className)}
+      className={cn("px-2 py-2 align-middle tabular-nums", className)}
+      style={{ fontSize: 'var(--type-body)' }}
       {...props}
     />
   );
