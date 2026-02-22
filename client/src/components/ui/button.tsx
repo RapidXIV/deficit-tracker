@@ -3,26 +3,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center font-mono font-medium transition-opacity focus-visible:outline-none disabled:opacity-40 disabled:pointer-events-none",
+  "inline-flex items-center justify-center font-mono font-medium focus-visible:outline-none disabled:opacity-40 disabled:pointer-events-none transition-all duration-100",
   {
     variants: {
       variant: {
+        // Primary — Finish Day, Sign In, Sign Up, Log Out (settings)
         default:
-          "border border-white/25 bg-black text-white hover:bg-white/5 active:bg-white/10",
+          "bg-[var(--surface-2)] border border-[var(--border-medium)] text-[var(--text-primary)] uppercase tracking-[0.1em] hover:bg-[var(--surface-3)] hover:border-[var(--border-focus)] active:scale-[0.98]",
+        // Secondary — History, Log Out (settings), Back
         outline:
-          "border border-white bg-black text-white hover:bg-white/5 active:bg-white/10",
+          "bg-transparent border border-[var(--border-subtle)] text-[var(--text-primary)] uppercase tracking-[0.1em] hover:border-[var(--border-medium)] active:scale-[0.98]",
+        // Ghost — nav icons (logout arrow, settings gear, chevrons)
         ghost:
-          "text-muted-foreground hover:text-white bg-transparent",
+          "text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-transparent",
+        // Destructive — Reset Goal
         destructive:
-          "border border-red-400 text-red-400 hover:bg-red-400/10",
+          "bg-[var(--surface-2)] border border-[var(--border-medium)] text-[var(--accent-negative)] uppercase tracking-[0.1em] hover:bg-[var(--surface-3)] hover:border-[rgba(255,59,59,0.4)] active:scale-[0.98]",
       },
       size: {
-        default: "h-10 px-4 rounded-md text-sm",
-        sm: "h-8 px-3 rounded-md text-xs",
-        lg: "h-11 px-6 rounded-md text-sm",
-        icon: "h-9 w-9 rounded-md",
-        full: "h-10 w-full rounded-md text-sm",
-        counter: "h-14 w-20 rounded-md text-xl",
+        default: "h-10 px-4 rounded-[var(--radius-sm)] text-[12px]",
+        sm: "h-8 px-3 rounded-[var(--radius-sm)] text-[11px]",
+        lg: "h-11 px-6 rounded-[var(--radius-sm)] text-[12px]",
+        icon: "h-9 w-9 rounded-[var(--radius-sm)]",
+        full: "h-11 w-full rounded-[var(--radius-sm)] text-[12px]",
+        counter: "h-14 w-20 rounded-[var(--radius-md)] text-xl",
       },
     },
     defaultVariants: {

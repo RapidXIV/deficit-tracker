@@ -61,7 +61,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
 
           <div className="w-full flex flex-col gap-3">
             <Button
-              variant="outline"
+              variant="default"
               size="full"
               onClick={() => setMode("signin")}
             >
@@ -69,7 +69,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
               Sign In
             </Button>
             <Button
-              variant="outline"
+              variant="default"
               size="full"
               onClick={() => setMode("signup")}
             >
@@ -78,7 +78,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
             </Button>
             <button
               onClick={handleGuest}
-              className="mt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-white transition-colors uppercase tracking-widest"
+              className="mt-1 flex items-center justify-center gap-1.5 text-[12px] uppercase tracking-[0.1em] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-150"
             >
               <User className="h-3 w-3" />
               Continue as Guest
@@ -91,7 +91,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
         <div className="w-full max-w-xs">
           <button
             onClick={() => { setMode("home"); setError(""); }}
-            className="text-xs text-muted-foreground hover:text-white uppercase tracking-widest mb-6 block"
+            className="text-[12px] uppercase tracking-[0.1em] mb-6 block text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-150"
           >
             ← Back
           </button>
@@ -128,7 +128,7 @@ export function Landing({ onAuthenticated }: LandingProps) {
 
             <Button
               type="submit"
-              variant="outline"
+              variant="default"
               size="full"
               disabled={loading}
             >

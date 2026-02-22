@@ -248,10 +248,10 @@ export function DayScreen({
 
       {/* ── Bottom buttons ── */}
       <div className="flex flex-col gap-1.5 flex-shrink-0 pb-1">
-        <Button variant="outline" size="full" onClick={onFinishDay}>
+        <Button variant="default" size="full" onClick={onFinishDay}>
           Finish Day
         </Button>
-        <Button variant="default" size="full" onClick={onShowHistory}>
+        <Button variant="outline" size="full" onClick={onShowHistory}>
           History
         </Button>
       </div>
