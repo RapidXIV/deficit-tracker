@@ -27,8 +27,8 @@ export function Home() {
   // This prevents an inflated deficit (TDEE with 0 calories in) from affecting the
   // ProgressCard before the user has finished logging for the day.
   const completedLogs = useMemo(
-    () => logs.filter((l) => l.date !== currentDate),
-    [logs, currentDate]
+    () => logs.filter((l) => l.completed === true),
+    [logs]
   );
   const { stats, dynamicTDEE } = useDeficitStats(settings, completedLogs);
 
