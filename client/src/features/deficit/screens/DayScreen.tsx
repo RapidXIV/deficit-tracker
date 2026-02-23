@@ -97,10 +97,6 @@ export function DayScreen({
     todayDeficit > 0 ? 'var(--accent-positive)' :
     todayDeficit < 0 ? 'var(--accent-negative)' :
     'var(--text-muted)';
-  const totalColor =
-    stats.totalDeficitAchieved > 0 ? 'var(--accent-positive)' :
-    stats.totalDeficitAchieved < 0 ? 'var(--accent-negative)' :
-    'var(--text-muted)';
 
   return (
     <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe pb-safe">
@@ -330,24 +326,25 @@ export function DayScreen({
       <div
         className="mt-2 flex-shrink-0 p-4 text-center"
         style={{
-          background: 'var(--surface-1)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-lg)',
+          background: '#e8923a',
+          border: '3px solid #1a1a18',
+          borderRadius: '16px',
+          boxShadow: '4px 4px 0px #1a1a18',
         }}
       >
         <p
           className="font-medium uppercase tracking-[0.08em]"
-          style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+          style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
         >
           Total Deficit
         </p>
         {/* Micro-detail: 40px hairline rule — adds gravitas */}
-        <div className="w-10 h-px mx-auto my-2" style={{ background: 'var(--border-medium)' }} />
+        <div className="w-10 h-px mx-auto my-2" style={{ background: 'rgba(255,255,255,0.4)' }} />
         <p
           className="font-bold tabular-nums leading-tight tracking-[-0.02em]"
           style={{
             fontSize: 'var(--type-display)',
-            color: totalColor,
+            color: '#ffffff',
           }}
         >
           {formatDeficit(stats.totalDeficitAchieved)}
