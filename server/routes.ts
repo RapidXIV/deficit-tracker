@@ -3,16 +3,8 @@ import { z } from "zod";
 import * as storage from "./storage";
 
 // ─── User identification ───────────────────────────────────────────────────────
-// Authenticated users: userId comes from express-session
-// Guest users: userId derived from x-guest-id header, prefixed with "guest_"
 export function getUserId(req: Request): string | null {
-  if (req.session.userId) return req.session.userId;
-
-  const guestId = req.headers["x-guest-id"];
-  if (typeof guestId === "string" && guestId.trim()) {
-    return `guest_${guestId.trim()}`;
-  }
-  return null;
+  return req.session.userId ?? null;
 }
 
 export const apiRouter = Router();

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { ArrowRightFromLine, UserPlus, User } from "lucide-react";
+import { ArrowRightFromLine, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { apiRequest, startGuestSession } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/queryClient";
 import { useQueryClient } from "@tanstack/react-query";
 
 type Mode = "home" | "signin" | "signup";
@@ -41,11 +41,6 @@ export function Landing({ onAuthenticated }: LandingProps) {
     } finally {
       setLoading(false);
     }
-  }
-
-  function handleGuest() {
-    startGuestSession();
-    onAuthenticated();
   }
 
   return (
@@ -97,13 +92,6 @@ export function Landing({ onAuthenticated }: LandingProps) {
               <UserPlus className="h-4 w-4 mr-2" />
               Sign Up
             </Button>
-            <button
-              onClick={handleGuest}
-              className="mt-1 flex items-center justify-center gap-1.5 text-[12px] uppercase tracking-[0.1em] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors duration-150"
-            >
-              <User className="h-3 w-3" />
-              Continue as Guest
-            </button>
           </div>
         </div>
       )}

@@ -9,7 +9,6 @@ import { DayScreen } from "@/features/deficit/screens/DayScreen";
 import { LogScreen } from "@/features/deficit/screens/LogScreen";
 import { Landing } from "./landing";
 import { todayString, addDays } from "@/lib/date-utils";
-import { isGuestMode } from "@/lib/queryClient";
 import { computeLogsWithEstimatedWeights } from "@/lib/calculations";
 import type { UserSettings } from "@shared/schema";
 
@@ -88,9 +87,8 @@ export function Home() {
     );
   }
 
-  // Not authenticated and not guest mode
-  const isGuest = isGuestMode();
-  if (!isAuthenticated && !isGuest && !authed) {
+  // Not authenticated → show landing
+  if (!isAuthenticated && !authed) {
     return <Landing onAuthenticated={() => setAuthed(true)} />;
   }
 
