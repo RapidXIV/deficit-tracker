@@ -129,11 +129,39 @@ export function useCalorieTracking({
     [debouncedSave]
   );
 
-  const finishDay = useCallback(async () => {
+  const finishDay = useCallback(() => {
     clearTimeout(debounceRef.current);
-    await save(cInRef.current, cOutRef.current, true);
+
+    const cIn = cInRef.current;
+    const cOut = cOutRef.current;
+    const deficit = Math.round(tdeeRef.current) + cOut - cIn;
+
+    const existing = logsRef.current.find((l) => l.date === date);
+    const maxDay =
+      logsRef.current.length > 0
+        ? Math.max(...logsRef.current.map((l) => l.dayNumber))
+        : 0;
+    const dayNumber = existing?.dayNumber ?? maxDay + 1;
+
+    const optimisticLog: DailyLog = {
+      id: existing?.id ?? `optimistic-${date}`,
+      userId: existing?.userId ?? "",
+      date,
+      caloriesIn: cIn,
+      caloriesOut: cOut,
+      deficit,
+      dayNumber,
+      completed: true,
+    };
+
+    qc.setQueryData<DailyLog[]>(["/api/logs"], (prev = []) => [
+      ...prev.filter((l) => l.date !== date),
+      optimisticLog,
+    ]);
+
     onDayFinished();
-  }, [save, onDayFinished]);
+    save(cIn, cOut, true); // fire-and-forget: server save + real refetch in background
+  }, [date, save, onDayFinished, qc]);
 
   const todayDeficit =
     Math.round(dynamicTDEE) + caloriesOut - caloriesIn;
