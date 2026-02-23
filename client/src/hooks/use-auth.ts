@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest, clearGuestSession } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/queryClient";
 
 interface AuthUser {
   id: string;
@@ -26,7 +26,6 @@ export function useLogout() {
   return useMutation({
     mutationFn: () => apiRequest("POST", "/api/auth/logout"),
     onSuccess: () => {
-      clearGuestSession();
       qc.clear();
     },
   });

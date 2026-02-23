@@ -18,6 +18,18 @@ export async function getSettings(userId: string): Promise<UserSettings | null> 
   return settings ?? null;
 }
 
+export async function patchSettings(
+  userId: string,
+  data: Partial<Omit<UserSettings, "id" | "userId">>
+): Promise<UserSettings> {
+  const [updated] = await db
+    .update(userSettings)
+    .set(data)
+    .where(eq(userSettings.userId, userId))
+    .returning();
+  return updated;
+}
+
 export async function upsertSettings(
   userId: string,
   data: Omit<UserSettings, "id" | "userId">

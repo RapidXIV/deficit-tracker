@@ -22,10 +22,19 @@ export function useSettings() {
     },
   });
 
+  const patchMutation = useMutation({
+    mutationFn: (data: { goalWeight: number }) =>
+      apiRequest<UserSettings>("PATCH", "/api/settings", data),
+    onSuccess: (updated) => {
+      qc.setQueryData(["/api/settings"], updated);
+    },
+  });
+
   return {
     settings: settings ?? null,
     isLoading,
     saveSettings: saveMutation.mutateAsync,
     isSaving: saveMutation.isPending,
+    patchGoalWeight: patchMutation.mutateAsync,
   };
 }

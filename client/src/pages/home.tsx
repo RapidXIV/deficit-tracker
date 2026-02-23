@@ -14,7 +14,7 @@ import type { UserSettings } from "@shared/schema";
 
 export function Home() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const { settings, saveSettings } = useSettings();
+  const { settings, saveSettings, patchGoalWeight } = useSettings();
   const { logs, isLogsLoaded, resetDay, resetAll } = useLogs();
   const logout = useLogout();
 
@@ -136,6 +136,9 @@ export function Home() {
         setAuthed(false);
         stickySetRef.current = false;
         setCurrentDate(todayString());
+      }}
+      onSaveGoalWeight={async (weight) => {
+        await patchGoalWeight({ goalWeight: weight });
       }}
       onResetGoal={async () => {
         await resetAll();

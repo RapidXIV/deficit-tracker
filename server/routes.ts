@@ -54,6 +54,32 @@ apiRouter.post("/settings", async (req, res) => {
   }
 });
 
+// PATCH /api/settings — partial update (e.g. just goalWeight)
+apiRouter.patch("/settings", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  const schema = z.object({
+    goalWeight: z.number().positive(),
+  }).partial().refine(obj => Object.keys(obj).length > 0, {
+    message: "At least one field required",
+  });
+
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) {
+    return res
+      .status(400)
+      .json({ error: "Invalid data", details: parsed.error.flatten() });
+  }
+
+  try {
+    const settings = await storage.patchSettings(userId, parsed.data);
+    res.json(settings);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // ─── Logs ─────────────────────────────────────────────────────────────────────
 
 // GET /api/logs — all logs for the current user

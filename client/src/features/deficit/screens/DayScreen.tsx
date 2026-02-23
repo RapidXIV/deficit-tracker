@@ -44,6 +44,7 @@ interface DayScreenProps {
   onShowHistory: () => void;
   onLogout: () => void;
   onResetGoal: () => Promise<void>;
+  onSaveGoalWeight: (weight: number) => Promise<void>;
 }
 
 export function DayScreen({
@@ -63,9 +64,16 @@ export function DayScreen({
   onShowHistory,
   onLogout,
   onResetGoal,
+  onSaveGoalWeight,
 }: DayScreenProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [resetConfirm, setResetConfirm] = useState(false);
+  const [goalWeightInput, setGoalWeightInput] = useState(
+    String(settings.goalWeight)
+  );
+  useEffect(() => {
+    setGoalWeightInput(String(settings.goalWeight));
+  }, [settings.goalWeight]);
 
   // Deficit flash: increment key on every change after initial mount so the
   // CSS animation restarts from scratch (key change forces DOM remount)
@@ -126,6 +134,35 @@ export function DayScreen({
               <DialogTitle>Settings</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col gap-2 mt-2">
+              {/* Goal Weight Editor */}
+              <div className="flex flex-col gap-1.5">
+                <p
+                  className="font-medium uppercase tracking-[0.08em]"
+                  style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+                >
+                  Goal (lbs)
+                </p>
+                <Input
+                  type="number"
+                  inputMode="decimal"
+                  value={goalWeightInput}
+                  onChange={(e) => setGoalWeightInput(e.target.value)}
+                  className="text-center text-sm"
+                />
+                <Button
+                  variant="default"
+                  size="full"
+                  onClick={async () => {
+                    const w = parseFloat(goalWeightInput);
+                    if (!isNaN(w) && w > 0) {
+                      await onSaveGoalWeight(w);
+                    }
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
+
               {/* Reset Goal */}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
