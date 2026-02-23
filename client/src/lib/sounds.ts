@@ -10,11 +10,23 @@ function getCtx(): AudioContext {
   return ctx;
 }
 
+function getVolume(): number {
+  const stored = localStorage.getItem("sound-volume");
+  return stored !== null ? parseInt(stored, 10) / 100 : 0.5;
+}
+
 /** Short punchy boing/honk — plays on + button tap. ~100ms. */
 export function playTap(): void {
   try {
+    const volume = getVolume();
+    if (volume === 0) return;
+
     const ac = getCtx();
     const now = ac.currentTime;
+
+    const master = ac.createGain();
+    master.gain.value = volume;
+    master.connect(ac.destination);
 
     // Noise burst: bandpass-filtered white noise, decays fast
     const bufferSize = Math.floor(ac.sampleRate * 0.045);
@@ -36,7 +48,7 @@ export function playTap(): void {
 
     noise.connect(bandpass);
     bandpass.connect(noiseGain);
-    noiseGain.connect(ac.destination);
+    noiseGain.connect(master);
     noise.start(now);
     noise.stop(now + 0.05);
 
@@ -52,7 +64,7 @@ export function playTap(): void {
     oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
 
     osc.connect(oscGain);
-    oscGain.connect(ac.destination);
+    oscGain.connect(master);
     osc.start(now);
     osc.stop(now + 0.14);
   } catch {
@@ -63,8 +75,15 @@ export function playTap(): void {
 /** Triumphant silly fanfare — plays on Finish Day / Update Day. ~400ms. */
 export function playComplete(): void {
   try {
+    const volume = getVolume();
+    if (volume === 0) return;
+
     const ac = getCtx();
     const now = ac.currentTime;
+
+    const master = ac.createGain();
+    master.gain.value = volume;
+    master.connect(ac.destination);
 
     // Ascending cartoon victory jingle: slot machine meets clown horn
     const notes = [350, 450, 600, 800, 1050];
@@ -99,9 +118,9 @@ export function playComplete(): void {
       gain2.gain.exponentialRampToValueAtTime(0.001, t + noteDur + 0.03);
 
       osc.connect(gain);
-      gain.connect(ac.destination);
+      gain.connect(master);
       osc2.connect(gain2);
-      gain2.connect(ac.destination);
+      gain2.connect(master);
 
       osc.start(t);
       osc.stop(t + noteDur + 0.06);
