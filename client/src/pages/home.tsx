@@ -14,7 +14,7 @@ import type { UserSettings } from "@shared/schema";
 
 export function Home() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const { settings, saveSettings, patchGoalWeight } = useSettings();
+  const { settings, isLoading: settingsLoading, saveSettings, patchGoalWeight } = useSettings();
   const { logs, isLogsLoaded, resetDay, resetAll } = useLogs();
   const logout = useLogout();
 
@@ -90,6 +90,17 @@ export function Home() {
   // Not authenticated → show landing
   if (!isAuthenticated && !authed) {
     return <Landing onAuthenticated={() => setAuthed(true)} />;
+  }
+
+  // Settings still loading → show spinner to avoid setup screen flash
+  if (settingsLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <span className="text-xs text-muted-foreground uppercase tracking-widest">
+          Loading...
+        </span>
+      </div>
+    );
   }
 
   // No settings yet → setup
