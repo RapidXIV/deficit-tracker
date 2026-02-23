@@ -45,6 +45,7 @@ interface DayScreenProps {
   onLogout: () => void;
   onResetGoal: () => Promise<void>;
   onSaveGoalWeight: (weight: number) => Promise<void>;
+  username: string;
 }
 
 export function DayScreen({
@@ -65,6 +66,7 @@ export function DayScreen({
   onLogout,
   onResetGoal,
   onSaveGoalWeight,
+  username,
 }: DayScreenProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [resetConfirm, setResetConfirm] = useState(false);
@@ -102,6 +104,14 @@ export function DayScreen({
 
   return (
     <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe pb-safe">
+      {/* ── Username ── */}
+      <p
+        className="text-center uppercase"
+        style={{ fontSize: 'var(--type-micro)', color: 'var(--text-muted)', letterSpacing: '0.04em' }}
+      >
+        {username}
+      </p>
+
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between h-9 flex-shrink-0">
         <Button variant="ghost" size="icon" onClick={onLogout} aria-label="Log out">

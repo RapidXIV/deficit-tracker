@@ -151,6 +151,7 @@ export function Home() {
       onSaveGoalWeight={async (weight) => {
         await patchGoalWeight({ goalWeight: weight });
       }}
+      username={user?.username ?? ""}
       onResetGoal={async () => {
         await resetAll();
         stickySetRef.current = false;
