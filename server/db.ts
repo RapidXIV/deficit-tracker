@@ -11,4 +11,9 @@ export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+// Without this handler, idle client errors crash the Node process (pg emits 'error' on EventEmitter)
+pool.on("error", (err) => {
+  console.error("Unexpected pool client error:", err.message);
+});
+
 export const db = drizzle(pool, { schema });

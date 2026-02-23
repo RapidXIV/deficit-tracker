@@ -19,21 +19,24 @@ app.use(express.json());
 // Session middleware (must come before any route that reads req.session)
 setupAuth(app);
 
+// Health check — Railway probes this to confirm the service is alive
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
+
 // Auth routes: POST /api/auth/signup, /login, /logout  GET /api/auth/me
 app.use("/api/auth", authRouter);
 
 // Data routes: /api/settings, /api/logs
 app.use("/api", apiRouter);
 
-// In production, serve the Vite-built React app from dist/public
-if (process.env.NODE_ENV === "production") {
-  const publicDir = path.join(__dirname, "public");
-  app.use(express.static(publicDir));
-  // SPA fallback: any non-API URL returns index.html
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(publicDir, "index.html"));
+// Serve the Vite-built React app (always, not just in production)
+const publicDir = path.join(__dirname, "public");
+app.use(express.static(publicDir));
+// SPA fallback: any non-API URL returns index.html
+app.get("*", (_req, res, next) => {
+  res.sendFile(path.join(publicDir, "index.html"), (err) => {
+    if (err) next(err);
   });
-}
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} [${process.env.NODE_ENV}]`);
