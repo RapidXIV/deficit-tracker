@@ -72,7 +72,59 @@ export function playTap(): void {
   }
 }
 
-/** Triumphant silly fanfare — plays on Finish Day / Update Day. ~400ms. */
+/** Deep resonant gong — plays on Finish Day / Update Day. ~2.5s decay. */
+export function playGong(): void {
+  try {
+    const volume = getVolume();
+    if (volume === 0) return;
+
+    const ac = getCtx();
+    const now = ac.currentTime;
+
+    const master = ac.createGain();
+    master.gain.value = volume;
+    master.connect(ac.destination);
+
+    function addLayer(freq: number, gainVal: number, decayTime: number, type: OscillatorType = "sine") {
+      const osc = ac.createOscillator();
+      osc.type = type;
+      osc.frequency.value = freq;
+      const g = ac.createGain();
+      g.gain.setValueAtTime(gainVal, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + decayTime);
+      osc.connect(g);
+      g.connect(master);
+      osc.start(now);
+      osc.stop(now + decayTime + 0.05);
+    }
+
+    // Fundamental: 65Hz, slow 2.5s decay
+    addLayer(65, 0.5, 2.5);
+    // Beating tone: 66.5Hz — 1.5Hz beat frequency creates slow pulse against fundamental
+    addLayer(66.5, 0.35, 2.5);
+    // Second harmonic: 131Hz
+    addLayer(131, 0.3, 2.0);
+    // High shimmer: 196Hz
+    addLayer(196, 0.15, 1.5);
+
+    // Strike transient: triangle 300Hz → 80Hz in 60ms, fast 100ms decay
+    const transient = ac.createOscillator();
+    transient.type = "triangle";
+    transient.frequency.setValueAtTime(300, now);
+    transient.frequency.exponentialRampToValueAtTime(80, now + 0.06);
+    const transientGain = ac.createGain();
+    transientGain.gain.setValueAtTime(0.4, now);
+    transientGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    transient.connect(transientGain);
+    transientGain.connect(master);
+    transient.start(now);
+    transient.stop(now + 0.12);
+  } catch {
+    // Audio unavailable — silent fail
+  }
+}
+
+/** Triumphant silly fanfare — kept for reference. ~400ms. */
 export function playComplete(): void {
   try {
     const volume = getVolume();
