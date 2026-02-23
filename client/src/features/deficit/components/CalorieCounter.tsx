@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Minus, Plus } from "lucide-react";
+import { playTap } from "@/lib/sounds";
 
 interface CalorieCounterProps {
   value: number;
@@ -49,7 +50,7 @@ export function CalorieCounter({
         style={momentum ? { fontWeight: 800 } : undefined}
       />
 
-      <button className="tally-btn" onClick={() => handleTap(onIncrement)} aria-label="Increase by 100">
+      <button className="tally-btn" onClick={() => { playTap(); handleTap(onIncrement); }} aria-label="Increase by 100">
         <Plus className="h-5 w-5" />
       </button>
     </div>

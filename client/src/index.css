@@ -4,46 +4,46 @@
 
 :root {
   /* ── Tailwind/shadcn theme tokens ── */
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --border: 0 0% 22%;
-  --card: 0 0% 0%;
-  --card-foreground: 0 0% 100%;
-  --primary: 0 0% 100%;
-  --primary-foreground: 0 0% 0%;
-  --muted: 0 0% 10%;
-  --muted-foreground: 0 0% 55%;
-  --input: 0 0% 12%;
-  --ring: 0 0% 100%;
+  --background: 40 33% 92%;
+  --foreground: 50 4% 10%;
+  --border: 38 22% 65%;
+  --card: 40 33% 92%;
+  --card-foreground: 50 4% 10%;
+  --primary: 28 80% 57%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 40 25% 84%;
+  --muted-foreground: 38 6% 52%;
+  --input: 40 33% 92%;
+  --ring: 28 80% 57%;
   --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
 
-  /* ── Design System V2: PRECISION ── */
+  /* ── Design System: DRAGON ── */
 
   /* Surface layers */
-  --surface-0: #000000;
-  --surface-1: #0A0A0A;
-  --surface-2: #111111;
-  --surface-3: #1A1A1A;
+  --surface-0: #f2ece0;
+  --surface-1: #ece4d4;
+  --surface-2: #e0d6c4;
+  --surface-3: #d4c8b0;
 
   /* Borders */
-  --border-subtle: #1E1E1E;
-  --border-medium: #2A2A2A;
-  --border-focus: #3A3A3A;
+  --border-subtle: #c8b898;
+  --border-medium: #a09070;
+  --border-focus: #1a1a18;
 
   /* Text */
-  --text-primary: #E8E8E8;
-  --text-secondary: #888888;
-  --text-muted: #555555;
-  --text-bright: #FFFFFF;
+  --text-primary: #1a1a18;
+  --text-secondary: #3a3830;
+  --text-muted: #8a8478;
+  --text-bright: #ffffff;
 
   /* Accents */
-  --accent-positive: #00D26A;
-  --accent-positive-dim: rgba(0, 210, 106, 0.15);
-  --accent-negative: #FF3B3B;
-  --accent-negative-dim: rgba(255, 59, 59, 0.10);
-  --accent-cold: #4A9EFF;
-  --accent-cold-dim: rgba(74, 158, 255, 0.08);
-  --accent-streak: #FF8C00;
+  --accent-positive: #48b8b8;
+  --accent-positive-dim: rgba(72, 184, 184, 0.15);
+  --accent-negative: #d43030;
+  --accent-negative-dim: rgba(212, 48, 48, 0.10);
+  --accent-cold: #48b8b8;
+  --accent-cold-dim: rgba(72, 184, 184, 0.08);
+  --accent-streak: #e8923a;
 
   /* Type scale */
   --type-display: 3rem;
@@ -67,7 +67,7 @@
   --radius-none: 0px;
   --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
 }
 
@@ -82,7 +82,7 @@ html {
 }
 
 body {
-  font-family: var(--font-mono);
+  font-family: 'Impact', 'Arial Black', 'Trebuchet MS', sans-serif;
   background: hsl(var(--background));
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -128,30 +128,28 @@ input[type="number"] {
   padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 16px), 24px);
 }
 
-/* Tally counter buttons (–  / +) */
+/* Tally counter buttons (– / +) */
 .tally-btn {
   width: 72px;
   height: 64px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface-1);
-  border: 1px solid var(--border-medium);
+  background: #48b8b8;
+  border: 3px solid #1a1a18;
   border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  color: #ffffff;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 100ms ease, border-color 150ms ease, color 150ms ease;
+  box-shadow: 4px 4px 0px #1a1a18;
+  transition: transform 50ms ease, box-shadow 50ms ease, background 100ms ease;
 }
 .tally-btn:hover {
-  background: var(--surface-2);
-  border-color: var(--border-focus);
-  color: var(--text-primary);
+  background: #3da8a8;
 }
 .tally-btn:active {
-  background: var(--surface-3);
-  transform: scale(0.97);
-  transition: background 100ms ease, border-color 150ms ease, color 150ms ease, transform 50ms ease;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #1a1a18;
 }
 
 /* Tally counter center number */

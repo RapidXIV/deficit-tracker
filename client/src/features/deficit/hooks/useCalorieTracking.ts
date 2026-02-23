@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react
 import { useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { UserSettings, DailyLog } from "@shared/schema";
+import { playGong } from "@/lib/sounds";
 
 interface UseCalorieTrackingProps {
   date: string;
@@ -159,6 +160,7 @@ export function useCalorieTracking({
       optimisticLog,
     ]);
 
+    playGong();
     onDayFinished();
     save(cIn, cOut, true); // fire-and-forget: server save + real refetch in background
   }, [date, save, onDayFinished, qc]);

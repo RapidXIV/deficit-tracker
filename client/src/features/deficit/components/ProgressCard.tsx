@@ -17,22 +17,23 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
     <div
       className="py-[14px] px-4"
       style={{
-        background: 'var(--surface-1)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-lg)',
+        background: '#48b8b8',
+        border: '3px solid #1a1a18',
+        borderRadius: '16px',
+        boxShadow: '4px 4px 0px #1a1a18',
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <span
           className="font-medium uppercase tracking-[0.08em]"
-          style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+          style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
         >
           Progress ({progressPercent}%)
         </span>
         <span
           className="tabular-nums"
-          style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+          style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
         >
           Goal: {goalCalStr} cal
         </span>
@@ -45,7 +46,7 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
           <div
             key={pct}
             className="absolute top-0 bottom-0 w-px pointer-events-none"
-            style={{ left: `${pct}%`, background: 'var(--border-medium)' }}
+            style={{ left: `${pct}%`, background: 'rgba(255,255,255,0.35)' }}
           />
         ))}
       </div>
@@ -56,7 +57,7 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
         <div>
           <div
             className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
           >
             Streak
           </div>
@@ -65,11 +66,11 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
             style={{ fontSize: 'var(--type-value)' }}
           >
             {deficitStreak > 0 ? (
-              <span className="streak-ember" style={{ color: 'var(--accent-streak)' }}>
+              <span className="streak-ember" style={{ color: '#ffffff' }}>
                 🔥 {deficitStreak}d
               </span>
             ) : (
-              <span style={{ color: 'var(--text-muted)' }}>—</span>
+              <span style={{ color: 'rgba(255,255,255,0.6)' }}>—</span>
             )}
           </div>
         </div>
@@ -78,13 +79,13 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
         <div className="text-right">
           <div
             className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
           >
             Est. lbs
           </div>
           <div
             className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: 'var(--text-primary)' }}
+            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
           >
             {latestEstimatedWeight.toFixed(1)}
           </div>
@@ -94,13 +95,13 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
         <div>
           <div
             className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
           >
             Est. Complete
           </div>
           <div
             className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: 'var(--text-primary)' }}
+            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
           >
             {estimatedCompletionDate ? formatCompletionDate(estimatedCompletionDate) : '—'}
           </div>
@@ -110,13 +111,13 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
         <div className="text-right">
           <div
             className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
           >
             Goal lbs
           </div>
           <div
             className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: 'var(--text-primary)' }}
+            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
           >
             {settings.goalWeight}
           </div>
