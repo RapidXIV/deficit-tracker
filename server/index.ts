@@ -9,6 +9,10 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 
 const app = express();
 
+// Trust Railway's reverse proxy so req.secure is true on HTTPS connections
+// (required for secure: true session cookies to be set correctly)
+app.set("trust proxy", 1);
+
 // Parse JSON request bodies
 app.use(express.json());
 
