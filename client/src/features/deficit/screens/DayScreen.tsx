@@ -247,7 +247,6 @@ export function DayScreen({
           style={{
             fontSize: 'var(--type-display)',
             color: totalColor,
-            textDecoration: stats.totalDeficitAchieved === 0 ? 'line-through' : 'none',
           }}
         >
           {formatDeficit(stats.totalDeficitAchieved)}
