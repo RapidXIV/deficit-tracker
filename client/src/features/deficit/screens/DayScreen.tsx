@@ -68,12 +68,19 @@ export function DayScreen({
 }: DayScreenProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [resetConfirm, setResetConfirm] = useState(false);
+  const [editingGoalWeight, setEditingGoalWeight] = useState(false);
   const [goalWeightInput, setGoalWeightInput] = useState(
     String(settings.goalWeight)
   );
   useEffect(() => {
     setGoalWeightInput(String(settings.goalWeight));
   }, [settings.goalWeight]);
+  useEffect(() => {
+    if (!settingsOpen) {
+      setEditingGoalWeight(false);
+      setGoalWeightInput(String(settings.goalWeight));
+    }
+  }, [settingsOpen, settings.goalWeight]);
 
   // Deficit flash: increment key on every change after initial mount so the
   // CSS animation restarts from scratch (key change forces DOM remount)
@@ -135,33 +142,80 @@ export function DayScreen({
             </DialogHeader>
             <div className="flex flex-col gap-2 mt-2">
               {/* Goal Weight Editor */}
-              <div className="flex flex-col gap-1.5">
-                <p
-                  className="font-medium uppercase tracking-[0.08em]"
-                  style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
-                >
-                  Goal (lbs)
-                </p>
-                <Input
-                  type="number"
-                  inputMode="decimal"
-                  value={goalWeightInput}
-                  onChange={(e) => setGoalWeightInput(e.target.value)}
-                  className="text-center text-sm"
-                />
-                <Button
-                  variant="default"
-                  size="full"
-                  onClick={async () => {
-                    const w = parseFloat(goalWeightInput);
-                    if (!isNaN(w) && w > 0) {
-                      await onSaveGoalWeight(w);
-                    }
+              {!editingGoalWeight ? (
+                <div
+                  className="flex items-center justify-between px-3 py-2"
+                  style={{
+                    background: 'var(--surface-1)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-lg)',
                   }}
                 >
-                  Save
-                </Button>
-              </div>
+                  <div>
+                    <p
+                      className="font-medium uppercase tracking-[0.08em]"
+                      style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+                    >
+                      Goal (lbs)
+                    </p>
+                    <p className="font-mono tabular-nums text-sm" style={{ color: 'var(--text-primary)' }}>
+                      {settings.goalWeight}
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setGoalWeightInput(String(settings.goalWeight));
+                      setEditingGoalWeight(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-1.5">
+                  <p
+                    className="font-medium uppercase tracking-[0.08em]"
+                    style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)' }}
+                  >
+                    Goal (lbs)
+                  </p>
+                  <Input
+                    type="number"
+                    inputMode="decimal"
+                    value={goalWeightInput}
+                    autoFocus
+                    onChange={(e) => setGoalWeightInput(e.target.value)}
+                    className="text-center text-sm"
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      variant="default"
+                      size="full"
+                      onClick={async () => {
+                        const w = parseFloat(goalWeightInput);
+                        if (!isNaN(w) && w > 0) {
+                          await onSaveGoalWeight(w);
+                          setEditingGoalWeight(false);
+                        }
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="full"
+                      onClick={() => {
+                        setGoalWeightInput(String(settings.goalWeight));
+                        setEditingGoalWeight(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
 
               {/* Reset Goal */}
               <AlertDialog>
