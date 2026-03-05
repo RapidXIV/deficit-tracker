@@ -51,93 +51,96 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
         ))}
       </div>
 
-      {/* 2×2 stats grid */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-3">
-        {/* Streak */}
-        <div>
-          <div
-            className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
-          >
-            Streak
+      {/* Stats: 3-col top row, 2-col bottom row */}
+      <div className="mt-3 flex flex-col gap-y-2">
+        {/* Top row: Streak | Avg. Deficit | Est. Complete */}
+        <div className="grid grid-cols-3">
+          {/* Streak */}
+          <div>
+            <div
+              className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
+              style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
+            >
+              Streak
+            </div>
+            <div className="font-mono font-bold text-base tabular-nums leading-tight">
+              {deficitStreak > 0 ? (
+                <span className="streak-ember" style={{ color: '#ffffff' }}>
+                  🔥 {deficitStreak}d
+                </span>
+              ) : (
+                <span style={{ color: 'rgba(255,255,255,0.6)' }}>—</span>
+              )}
+            </div>
           </div>
-          <div
-            className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)' }}
-          >
-            {deficitStreak > 0 ? (
-              <span className="streak-ember" style={{ color: '#ffffff' }}>
-                🔥 {deficitStreak}d
-              </span>
-            ) : (
-              <span style={{ color: 'rgba(255,255,255,0.6)' }}>—</span>
-            )}
+
+          {/* Avg. Deficit */}
+          <div className="text-center">
+            <div
+              className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
+              style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
+            >
+              Avg. Deficit
+            </div>
+            <div
+              className="font-mono font-bold text-lg tabular-nums leading-tight"
+              style={{ color: '#ffffff' }}
+            >
+              {stats.avgDailyDeficit !== 0
+                ? (stats.avgDailyDeficit > 0 ? '+' : '') + Math.round(stats.avgDailyDeficit)
+                : '—'}
+            </div>
+          </div>
+
+          {/* Est. Complete */}
+          <div className="text-right">
+            <div
+              className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
+              style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
+            >
+              Est. Complete
+            </div>
+            <div
+              className="font-mono font-bold text-base tabular-nums leading-tight"
+              style={{ color: '#ffffff' }}
+            >
+              {estimatedCompletionDate ? formatCompletionDate(estimatedCompletionDate) : '—'}
+            </div>
           </div>
         </div>
 
-        {/* Est. lbs */}
-        <div className="text-right">
-          <div
-            className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
-          >
-            Est. lbs
+        {/* Bottom row: Est. lbs | Goal lbs */}
+        <div className="grid grid-cols-2">
+          {/* Est. lbs */}
+          <div>
+            <div
+              className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
+              style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
+            >
+              Est. lbs
+            </div>
+            <div
+              className="font-mono font-bold text-base tabular-nums leading-tight"
+              style={{ color: '#ffffff' }}
+            >
+              {latestEstimatedWeight.toFixed(1)}
+            </div>
           </div>
-          <div
-            className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
-          >
-            {latestEstimatedWeight.toFixed(1)}
-          </div>
-        </div>
 
-        {/* Avg. Deficit — spans both columns, centered */}
-        <div className="col-span-2 text-center">
-          <div
-            className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
-          >
-            Avg. Deficit
-          </div>
-          <div
-            className="font-mono font-bold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
-          >
-            {stats.avgDailyDeficit !== 0
-              ? (stats.avgDailyDeficit > 0 ? '+' : '') + Math.round(stats.avgDailyDeficit)
-              : '—'}
-          </div>
-        </div>
-
-        {/* Est. Complete */}
-        <div>
-          <div
-            className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
-          >
-            Est. Complete
-          </div>
-          <div
-            className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
-          >
-            {estimatedCompletionDate ? formatCompletionDate(estimatedCompletionDate) : '—'}
-          </div>
-        </div>
-
-        {/* Goal lbs */}
-        <div className="text-right">
-          <div
-            className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
-            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
-          >
-            Goal lbs
-          </div>
-          <div
-            className="font-semibold tabular-nums leading-tight"
-            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
-          >
-            {settings.goalWeight}
+          {/* Goal lbs */}
+          <div className="text-right">
+            <div
+              className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
+              style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
+            >
+              Goal lbs
+            </div>
+            <div
+              className="font-mono font-bold text-base tabular-nums leading-tight"
+              style={{ color: '#ffffff' }}
+            >
+              {settings.goalWeight}
+            </div>
           </div>
         </div>
       </div>
