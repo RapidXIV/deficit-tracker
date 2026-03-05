@@ -36,13 +36,12 @@ export function Home() {
     [logs, currentDate]
   );
 
-  // Log history shows all logs including today's autosaved entry
   const logsWithEstWeight = useMemo(
     () =>
       settings
-        ? computeLogsWithEstimatedWeights(logs, settings.startWeight)
+        ? computeLogsWithEstimatedWeights(completedLogs, settings.startWeight)
         : [],
-    [settings, logs]
+    [settings, completedLogs]
   );
 
   // Sticky day: once logs load, jump to the most recent logged date
