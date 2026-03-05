@@ -63,7 +63,10 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
             >
               Streak
             </div>
-            <div className="font-mono font-bold text-base tabular-nums leading-tight">
+            <div
+              className="font-semibold tabular-nums leading-tight"
+              style={{ fontSize: 'var(--type-value)' }}
+            >
               {deficitStreak > 0 ? (
                 <span className="streak-ember" style={{ color: '#ffffff' }}>
                   🔥 {deficitStreak}d
@@ -83,8 +86,8 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
               Avg. Deficit
             </div>
             <div
-              className="font-mono font-bold text-lg tabular-nums leading-tight"
-              style={{ color: '#ffffff' }}
+              className="font-semibold tabular-nums leading-tight"
+              style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
             >
               {stats.avgDailyDeficit !== 0
                 ? (stats.avgDailyDeficit > 0 ? '+' : '') + Math.round(stats.avgDailyDeficit)
@@ -101,8 +104,8 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
               Est. Complete
             </div>
             <div
-              className="font-mono font-bold text-base tabular-nums leading-tight"
-              style={{ color: '#ffffff' }}
+              className="font-semibold tabular-nums leading-tight"
+              style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
             >
               {estimatedCompletionDate ? formatCompletionDate(estimatedCompletionDate) : '—'}
             </div>
@@ -120,8 +123,8 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
               Est. lbs
             </div>
             <div
-              className="font-mono font-bold text-base tabular-nums leading-tight"
-              style={{ color: '#ffffff' }}
+              className="font-semibold tabular-nums leading-tight"
+              style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
             >
               {latestEstimatedWeight.toFixed(1)}
             </div>
@@ -136,8 +139,8 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
               Goal lbs
             </div>
             <div
-              className="font-mono font-bold text-base tabular-nums leading-tight"
-              style={{ color: '#ffffff' }}
+              className="font-semibold tabular-nums leading-tight"
+              style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
             >
               {settings.goalWeight}
             </div>
