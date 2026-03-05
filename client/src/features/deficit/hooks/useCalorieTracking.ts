@@ -79,7 +79,9 @@ export function useCalorieTracking({
           completed: existing?.completed || completed,
         });
         if (revision === revisionRef.current) {
-          qc.invalidateQueries({ queryKey: ["/api/logs"] });
+          qc.setQueryData<DailyLog[]>(["/api/logs"], (prev = []) =>
+            prev.map(l => l.date === date ? { ...l, caloriesIn: cIn, caloriesOut: cOut, deficit } : l)
+          );
         }
       } catch {
         // silent — user will see stale data but no error popup

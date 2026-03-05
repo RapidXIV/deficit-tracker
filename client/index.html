@@ -9,9 +9,45 @@
     <meta name="apple-mobile-web-app-title" content="Deficit" />
     <link rel="manifest" href="/manifest.json" />
     <title>Deficit</title>
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Impact', 'Arial Black', 'Trebuchet MS', sans-serif;
+        font-size: 3rem;
+        letter-spacing: 0.1em;
+        color: #fff;
+        opacity: 1;
+        transition: opacity 300ms ease;
+        pointer-events: none;
+      }
+    </style>
   </head>
   <body>
+    <div id="splash">DEFICIT</div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function () {
+        var root = document.getElementById('root');
+        if (!root) return;
+        var observer = new MutationObserver(function () {
+          if (root.firstChild) {
+            observer.disconnect();
+            var splash = document.getElementById('splash');
+            if (splash) {
+              splash.style.opacity = '0';
+              splash.addEventListener('transitionend', function () { splash.remove(); }, { once: true });
+            }
+          }
+        });
+        observer.observe(root, { childList: true });
+      })();
+    </script>
   </body>
 </html>
