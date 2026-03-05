@@ -91,6 +91,24 @@ export function ProgressCard({ stats, settings }: ProgressCardProps) {
           </div>
         </div>
 
+        {/* Avg. Deficit — spans both columns, centered */}
+        <div className="col-span-2 text-center">
+          <div
+            className="font-medium uppercase tracking-[0.08em] leading-none mb-1"
+            style={{ fontSize: 'var(--type-label)', color: 'rgba(255,255,255,0.85)' }}
+          >
+            Avg. Deficit
+          </div>
+          <div
+            className="font-mono font-bold tabular-nums leading-tight"
+            style={{ fontSize: 'var(--type-value)', color: '#ffffff' }}
+          >
+            {stats.avgDailyDeficit !== 0
+              ? (stats.avgDailyDeficit > 0 ? '+' : '') + Math.round(stats.avgDailyDeficit)
+              : '—'}
+          </div>
+        </div>
+
         {/* Est. Complete */}
         <div>
           <div
