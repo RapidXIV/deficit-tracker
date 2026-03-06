@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { formatShortDate, formatDeficit } from '@/lib/date-utils';
+import { formatShortDate, formatHistoryDate, formatDeficit } from '@/lib/date-utils';
 import type { LogWithEstimatedWeight } from '@/lib/calculations';
 
 interface LogHistoryTableProps {
@@ -61,7 +61,7 @@ export function LogHistoryTable({ logs, onDeleteDay }: LogHistoryTableProps) {
               <TableCell style={{ color: 'var(--text-muted)' }}>
                 {log.dayNumber}
               </TableCell>
-              <TableCell>{formatShortDate(log.date)}</TableCell>
+              <TableCell>{formatHistoryDate(log.date)}</TableCell>
               <TableCell className='text-right'>
                 {log.caloriesIn.toLocaleString()}
               </TableCell>
