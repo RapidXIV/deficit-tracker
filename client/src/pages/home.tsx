@@ -44,6 +44,16 @@ export function Home() {
     [settings, completedLogs]
   );
 
+  // Fade out splash once auth (and settings, if authenticated) are done loading
+  useEffect(() => {
+    if (authLoading) return;
+    if (isAuthenticated && settingsLoading) return;
+    const splash = document.getElementById('splash');
+    if (!splash) return;
+    splash.style.opacity = '0';
+    splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+  }, [authLoading, isAuthenticated, settingsLoading]);
+
   // Sticky day: once logs load, jump to the most recent logged date
   const stickySetRef = useRef(false);
   useEffect(() => {
@@ -75,32 +85,16 @@ export function Home() {
     onDayFinished: () => setCurrentDate(addDays(currentDate, 1)),
   });
 
-  // Show auth loading spinner
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <span className="text-xs text-muted-foreground uppercase tracking-widest">
-          Loading...
-        </span>
-      </div>
-    );
-  }
+  // Auth still loading — splash covers the blank screen
+  if (authLoading) return null;
 
   // Not authenticated → show landing
   if (!isAuthenticated && !authed) {
     return <Landing onAuthenticated={() => setAuthed(true)} />;
   }
 
-  // Settings still loading → show spinner to avoid setup screen flash
-  if (settingsLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <span className="text-xs text-muted-foreground uppercase tracking-widest">
-          Loading...
-        </span>
-      </div>
-    );
-  }
+  // Settings still loading — splash covers it on initial load; post-login transition is fast
+  if (settingsLoading) return null;
 
   // No settings yet → setup
   if (!settings) {
