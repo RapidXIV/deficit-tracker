@@ -134,7 +134,7 @@ export function Home() {
       <LogScreen
         logsWithEstWeight={logsWithEstWeight}
         onBack={() => setShowLog(false)}
-        onDeleteDay={resetDay}
+        onDeleteDay={async (date) => { await resetDay(date); }}
       />
     );
   }
