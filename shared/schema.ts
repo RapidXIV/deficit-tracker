@@ -62,13 +62,25 @@ export const dailyLogs = pgTable("daily_logs", {
 });
 
 // ─── lifting_logs ─────────────────────────────────────────────────────────────
+// One row per Add press — individual exercise entries
 export const liftingLogs = pgTable("lifting_logs", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(),
-  date: text("date").notNull(),              // 'YYYY-MM-DD'
-  exercises: jsonb("exercises").notNull().default([]), // { name, weight, sets, reps }[]
+  date: text("date").notNull(),              // 'YYYY-MM-DD' — server's today at log time
+  exerciseName: text("exercise_name").notNull(),
+  weight: real("weight").notNull().default(0),
+  sets: integer("sets").notNull().default(0),
+  reps: integer("reps").notNull().default(0),
   totalWork: real("total_work").notNull().default(0), // Joules
-  complete: boolean("complete").notNull().default(false),
+  loggedAt: timestamp("logged_at").defaultNow(),
+});
+
+// ─── lifting_template ─────────────────────────────────────────────────────────
+// One row per user — persists the exercise list with last-used numbers
+export const liftingTemplate = pgTable("lifting_template", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().unique(),
+  exercises: jsonb("exercises").notNull().default([]), // LiftingExercise[]
 });
 
 // ─── Zod schemas (for API input validation) ────────────────────────────────────
@@ -94,6 +106,4 @@ export type UserSettings = typeof userSettings.$inferSelect;
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 export type DailyLog = typeof dailyLogs.$inferSelect;
 export type InsertDailyLog = z.infer<typeof insertDailyLogSchema>;
-export type LiftingLog = Omit<typeof liftingLogs.$inferSelect, "exercises"> & {
-  exercises: LiftingExercise[];
-};
+export type LiftingEntry = typeof liftingLogs.$inferSelect;

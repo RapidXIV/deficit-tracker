@@ -122,8 +122,6 @@ export function Home() {
   if (showLifting) {
     return (
       <LiftingDayScreen
-        currentDate={currentDate}
-        onNavigateDate={setCurrentDate}
         onBack={() => setShowLifting(false)}
         onShowHistory={() => setShowLiftingLog(true)}
       />

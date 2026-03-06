@@ -1,13 +1,14 @@
-import { eq, and, asc } from "drizzle-orm";
+import { eq, and, asc, desc } from "drizzle-orm";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import {
   userSettings,
   dailyLogs,
   liftingLogs,
+  liftingTemplate,
   type UserSettings,
   type DailyLog,
-  type LiftingLog,
+  type LiftingEntry,
   type LiftingExercise,
 } from "../shared/schema";
 
@@ -126,53 +127,55 @@ export async function deleteAllLogs(userId: string): Promise<void> {
   await recalculateDayNumbers(userId);
 }
 
-// ─── Lifting Logs ──────────────────────────────────────────────────────────────
+// ─── Lifting Entries ──────────────────────────────────────────────────────────
 
-function calcTotalWork(exercises: LiftingExercise[]): number {
-  // (weight_lbs / 2.205) × 9.81 × 0.5m × sets × reps
-  return exercises.reduce((sum, ex) => {
-    return sum + (ex.weight / 2.205) * 9.81 * 0.5 * ex.sets * ex.reps;
-  }, 0);
-}
-
-export async function getLiftingLogs(userId: string): Promise<LiftingLog[]> {
-  const rows = await db
+export async function getLiftingEntries(userId: string): Promise<LiftingEntry[]> {
+  return db
     .select()
     .from(liftingLogs)
-    .where(and(eq(liftingLogs.userId, userId), eq(liftingLogs.complete, true)));
-  return rows as LiftingLog[];
+    .where(eq(liftingLogs.userId, userId))
+    .orderBy(desc(liftingLogs.date), desc(liftingLogs.loggedAt));
 }
 
-export async function getLiftingLogByDate(
+export async function addLiftingEntry(
   userId: string,
-  date: string
-): Promise<LiftingLog | null> {
+  data: { exerciseName: string; weight: number; sets: number; reps: number }
+): Promise<LiftingEntry> {
+  const today = new Date();
+  const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const totalWork = (data.weight / 2.205) * 9.81 * 0.5 * data.sets * data.reps;
+  const [created] = await db
+    .insert(liftingLogs)
+    .values({ userId, date, ...data, totalWork })
+    .returning();
+  return created;
+}
+
+// ─── Lifting Template ─────────────────────────────────────────────────────────
+
+export async function getLiftingTemplate(userId: string): Promise<LiftingExercise[]> {
   const [row] = await db
     .select()
-    .from(liftingLogs)
-    .where(and(eq(liftingLogs.userId, userId), eq(liftingLogs.date, date)));
-  return (row as LiftingLog) ?? null;
+    .from(liftingTemplate)
+    .where(eq(liftingTemplate.userId, userId));
+  return (row?.exercises as LiftingExercise[]) ?? [];
 }
 
-export async function upsertLiftingLog(
+export async function upsertLiftingTemplate(
   userId: string,
-  data: { date: string; exercises: LiftingExercise[]; complete: boolean }
-): Promise<LiftingLog> {
-  const totalWork = calcTotalWork(data.exercises);
-  const existing = await getLiftingLogByDate(userId, data.date);
+  exercises: LiftingExercise[]
+): Promise<void> {
+  const [existing] = await db
+    .select()
+    .from(liftingTemplate)
+    .where(eq(liftingTemplate.userId, userId));
 
   if (existing) {
-    const [updated] = await db
-      .update(liftingLogs)
-      .set({ exercises: data.exercises, totalWork, complete: data.complete })
-      .where(and(eq(liftingLogs.userId, userId), eq(liftingLogs.date, data.date)))
-      .returning();
-    return updated as LiftingLog;
+    await db
+      .update(liftingTemplate)
+      .set({ exercises })
+      .where(eq(liftingTemplate.userId, userId));
   } else {
-    const [created] = await db
-      .insert(liftingLogs)
-      .values({ userId, date: data.date, exercises: data.exercises, totalWork, complete: data.complete })
-      .returning();
-    return created as LiftingLog;
+    await db.insert(liftingTemplate).values({ userId, exercises });
   }
 }

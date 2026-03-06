@@ -7,10 +7,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatHistoryDate } from '@/lib/date-utils';
-import type { LiftingLog } from '@shared/schema';
+import type { LiftingEntry } from '@shared/schema';
 
 interface LiftingHistoryTableProps {
-  logs: LiftingLog[];
+  logs: LiftingEntry[];
 }
 
 export function LiftingHistoryTable({ logs }: LiftingHistoryTableProps) {
@@ -20,13 +20,12 @@ export function LiftingHistoryTable({ logs }: LiftingHistoryTableProps) {
         className='flex-1 flex items-center justify-center uppercase tracking-[0.08em]'
         style={{ fontSize: 'var(--type-label)', color: 'var(--text-muted)' }}
       >
-        No lifting logs yet.
+        No lifting entries yet.
       </div>
     );
   }
 
-  const sorted = [...logs].sort((a, b) => a.date.localeCompare(b.date));
-
+  // Already sorted newest-first from server; display index from end so newest = highest #
   return (
     <div className='flex-1 overflow-y-auto touch-pan-y border border-[var(--border-subtle)]'>
       <Table>
@@ -34,33 +33,32 @@ export function LiftingHistoryTable({ logs }: LiftingHistoryTableProps) {
           <TableRow className='border-b-0'>
             <TableHead className='w-8'>#</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Exercises</TableHead>
+            <TableHead>Exercise</TableHead>
+            <TableHead className='text-right'>Lbs</TableHead>
+            <TableHead className='text-right'>Sets×Reps</TableHead>
             <TableHead className='text-right'>Work (J)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sorted.map((log, i) => {
-            const nonEmpty = log.exercises.filter((ex) => ex.name.trim() !== '').length;
-            const [dow, date] = formatHistoryDate(log.date).split(' ');
-            return (
-              <TableRow key={log.id}>
-                <TableCell style={{ color: 'var(--text-muted)' }}>{i + 1}</TableCell>
-                <TableCell>
-                  <span style={{ display: 'inline-block', width: '2ch', minWidth: '2ch' }}>{dow}</span>
-                  {date}
-                </TableCell>
-                <TableCell style={{ color: 'var(--text-secondary)' }}>
-                  {nonEmpty} exercise{nonEmpty !== 1 ? 's' : ''}
-                </TableCell>
-                <TableCell
-                  className='text-right font-bold'
-                  style={{ color: 'var(--accent-positive)' }}
-                >
-                  +{Math.round(log.totalWork).toLocaleString()}
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {logs.map((entry, i) => (
+            <TableRow key={entry.id}>
+              <TableCell style={{ color: 'var(--text-muted)' }}>{logs.length - i}</TableCell>
+              <TableCell>{formatHistoryDate(entry.date)}</TableCell>
+              <TableCell style={{ color: 'var(--text-secondary)' }}>
+                {entry.exerciseName}
+              </TableCell>
+              <TableCell className='text-right tabular-nums'>{entry.weight}</TableCell>
+              <TableCell className='text-right tabular-nums'>
+                {entry.sets}×{entry.reps}
+              </TableCell>
+              <TableCell
+                className='text-right font-bold tabular-nums'
+                style={{ color: 'var(--accent-positive)' }}
+              >
+                +{Math.round(entry.totalWork).toLocaleString()}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

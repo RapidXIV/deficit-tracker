@@ -1,14 +1,14 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiftingHistoryTable } from "../components/LiftingHistoryTable";
-import { useLiftingLogs } from "../hooks/useLiftingLogs";
+import { useLiftingEntries } from "../hooks/useLiftingEntries";
 
 interface LiftingLogScreenProps {
   onBack: () => void;
 }
 
 export function LiftingLogScreen({ onBack }: LiftingLogScreenProps) {
-  const { logs } = useLiftingLogs();
+  const { entries: logs } = useLiftingEntries();
 
   return (
     <div className="h-[100dvh] flex flex-col max-w-md mx-auto pt-safe pb-safe">

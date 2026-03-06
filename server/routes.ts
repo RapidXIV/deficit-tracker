@@ -167,69 +167,74 @@ apiRouter.delete("/logs", async (req, res) => {
 
 // ─── Lifting ───────────────────────────────────────────────────────────────────
 
-const liftingBodySchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  exercises: z.array(liftingExerciseSchema),
-  complete: z.boolean(),
+const liftingEntrySchema = z.object({
+  exerciseName: z.string().min(1),
+  weight: z.number().min(0),
+  sets: z.number().int().min(0),
+  reps: z.number().int().min(0),
 });
 
-// GET /api/lifting — all complete lifting logs
+const liftingTemplateSchema = z.object({
+  exercises: z.array(liftingExerciseSchema),
+});
+
+// GET /api/lifting — all lifting entries for user
 apiRouter.get("/lifting", async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
   try {
-    const logs = await storage.getLiftingLogs(userId);
-    res.json(logs);
+    const entries = await storage.getLiftingEntries(userId);
+    res.json(entries);
   } catch {
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// GET /api/lifting/today — today's lifting log (must be before /:date)
-apiRouter.get("/lifting/today", async (req, res) => {
+// POST /api/lifting/entry — log one exercise entry for today
+apiRouter.post("/lifting/entry", async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-  const today = new Date();
-  const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
-  try {
-    const log = await storage.getLiftingLogByDate(userId, date);
-    if (!log) return res.status(404).json({ error: "No lifting log for today" });
-    res.json(log);
-  } catch {
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// GET /api/lifting/:date — lifting log for a specific date
-apiRouter.get("/lifting/:date", async (req, res) => {
-  const userId = getUserId(req);
-  if (!userId) return res.status(401).json({ error: "Unauthorized" });
-
-  try {
-    const log = await storage.getLiftingLogByDate(userId, req.params.date);
-    if (!log) return res.status(404).json({ error: "Lifting log not found" });
-    res.json(log);
-  } catch {
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// POST /api/lifting — save/update lifting log (totalWork calculated server-side)
-apiRouter.post("/lifting", async (req, res) => {
-  const userId = getUserId(req);
-  if (!userId) return res.status(401).json({ error: "Unauthorized" });
-
-  const parsed = liftingBodySchema.safeParse(req.body);
+  const parsed = liftingEntrySchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
   }
 
   try {
-    const log = await storage.upsertLiftingLog(userId, parsed.data);
-    res.json(log);
+    const entry = await storage.addLiftingEntry(userId, parsed.data);
+    res.json(entry);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /api/lifting/template — get saved exercise template
+apiRouter.get("/lifting/template", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const exercises = await storage.getLiftingTemplate(userId);
+    res.json({ exercises });
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /api/lifting/template — save exercise template
+apiRouter.post("/lifting/template", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  const parsed = liftingTemplateSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
+  }
+
+  try {
+    await storage.upsertLiftingTemplate(userId, parsed.data.exercises);
+    res.json({ ok: true });
   } catch {
     res.status(500).json({ error: "Server error" });
   }
