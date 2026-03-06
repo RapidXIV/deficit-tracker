@@ -7,6 +7,8 @@ import { useCalorieTracking } from "@/features/deficit/hooks/useCalorieTracking"
 import { SetupScreen } from "@/features/deficit/screens/SetupScreen";
 import { DayScreen } from "@/features/deficit/screens/DayScreen";
 import { LogScreen } from "@/features/deficit/screens/LogScreen";
+import { LiftingDayScreen } from "@/features/lifting/screens/LiftingDayScreen";
+import { LiftingLogScreen } from "@/features/lifting/screens/LiftingLogScreen";
 import { Landing } from "./landing";
 import { todayString, addDays } from "@/lib/date-utils";
 import { computeLogsWithEstimatedWeights } from "@/lib/calculations";
@@ -20,6 +22,8 @@ export function Home() {
 
   const [authed, setAuthed] = useState(false);
   const [showLog, setShowLog] = useState(false);
+  const [showLifting, setShowLifting] = useState(false);
+  const [showLiftingLog, setShowLiftingLog] = useState(false);
   const [currentDate, setCurrentDate] = useState(todayString());
 
   // Stats exclude the current in-progress day — only days completed via Finish Day count.
@@ -107,7 +111,26 @@ export function Home() {
     );
   }
 
-  // History screen
+  // Lifting history screen
+  if (showLifting && showLiftingLog) {
+    return (
+      <LiftingLogScreen onBack={() => setShowLiftingLog(false)} />
+    );
+  }
+
+  // Lifting day screen
+  if (showLifting) {
+    return (
+      <LiftingDayScreen
+        currentDate={currentDate}
+        onNavigateDate={setCurrentDate}
+        onBack={() => setShowLifting(false)}
+        onShowHistory={() => setShowLiftingLog(true)}
+      />
+    );
+  }
+
+  // Deficit history screen
   if (showLog) {
     return (
       <LogScreen
@@ -135,6 +158,7 @@ export function Home() {
       isCurrentDayCompleted={isCurrentDayCompleted}
       onNavigateDate={setCurrentDate}
       onShowHistory={() => setShowLog(true)}
+      onShowLifting={() => setShowLifting(true)}
       onLogout={async () => {
         await logout.mutateAsync();
         setAuthed(false);

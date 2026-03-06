@@ -42,6 +42,7 @@ interface DayScreenProps {
   isCurrentDayCompleted: boolean;
   onNavigateDate: (date: string) => void;
   onShowHistory: () => void;
+  onShowLifting: () => void;
   onLogout: () => void;
   onResetGoal: () => Promise<void>;
   onSaveGoalWeight: (weight: number) => Promise<void>;
@@ -63,6 +64,7 @@ export function DayScreen({
   isCurrentDayCompleted,
   onNavigateDate,
   onShowHistory,
+  onShowLifting,
   onLogout,
   onResetGoal,
   onSaveGoalWeight,
@@ -399,6 +401,9 @@ export function DayScreen({
             Finish Day
           </Button>
         )}
+        <Button variant="outline" size="full" onClick={onShowLifting}>
+          Lifting
+        </Button>
         <Button variant="outline" size="full" onClick={onShowHistory}>
           History
         </Button>
