@@ -3,6 +3,7 @@ import {
   text,
   varchar,
   integer,
+  serial,
   real,
   boolean,
   timestamp,
@@ -60,6 +61,16 @@ export const dailyLogs = pgTable("daily_logs", {
   completed: boolean("completed").notNull().default(false),
 });
 
+// ─── lifting_logs ─────────────────────────────────────────────────────────────
+export const liftingLogs = pgTable("lifting_logs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  date: text("date").notNull(),              // 'YYYY-MM-DD'
+  exercises: jsonb("exercises").notNull().default([]), // { name, weight, sets, reps }[]
+  totalWork: real("total_work").notNull().default(0), // Joules
+  complete: boolean("complete").notNull().default(false),
+});
+
 // ─── Zod schemas (for API input validation) ────────────────────────────────────
 export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
   id: true,
@@ -68,6 +79,14 @@ export const insertDailyLogSchema = createInsertSchema(dailyLogs).omit({
   id: true,
 });
 
+export const liftingExerciseSchema = z.object({
+  name: z.string(),
+  weight: z.number().min(0), // lbs
+  sets: z.number().int().min(0),
+  reps: z.number().int().min(0),
+});
+export type LiftingExercise = z.infer<typeof liftingExerciseSchema>;
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
@@ -75,3 +94,6 @@ export type UserSettings = typeof userSettings.$inferSelect;
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 export type DailyLog = typeof dailyLogs.$inferSelect;
 export type InsertDailyLog = z.infer<typeof insertDailyLogSchema>;
+export type LiftingLog = Omit<typeof liftingLogs.$inferSelect, "exercises"> & {
+  exercises: LiftingExercise[];
+};

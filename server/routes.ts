@@ -1,6 +1,7 @@
 import { Router, type Request } from "express";
 import { z } from "zod";
 import * as storage from "./storage";
+import { liftingExerciseSchema } from "../shared/schema";
 
 // ─── User identification ───────────────────────────────────────────────────────
 export function getUserId(req: Request): string | null {
@@ -159,6 +160,76 @@ apiRouter.delete("/logs", async (req, res) => {
   try {
     await storage.deleteAllLogs(userId);
     res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ─── Lifting ───────────────────────────────────────────────────────────────────
+
+const liftingBodySchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  exercises: z.array(liftingExerciseSchema),
+  complete: z.boolean(),
+});
+
+// GET /api/lifting — all complete lifting logs
+apiRouter.get("/lifting", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const logs = await storage.getLiftingLogs(userId);
+    res.json(logs);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /api/lifting/today — today's lifting log (must be before /:date)
+apiRouter.get("/lifting/today", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  const today = new Date();
+  const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+  try {
+    const log = await storage.getLiftingLogByDate(userId, date);
+    if (!log) return res.status(404).json({ error: "No lifting log for today" });
+    res.json(log);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /api/lifting/:date — lifting log for a specific date
+apiRouter.get("/lifting/:date", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const log = await storage.getLiftingLogByDate(userId, req.params.date);
+    if (!log) return res.status(404).json({ error: "Lifting log not found" });
+    res.json(log);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /api/lifting — save/update lifting log (totalWork calculated server-side)
+apiRouter.post("/lifting", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  const parsed = liftingBodySchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
+  }
+
+  try {
+    const log = await storage.upsertLiftingLog(userId, parsed.data);
+    res.json(log);
   } catch {
     res.status(500).json({ error: "Server error" });
   }
