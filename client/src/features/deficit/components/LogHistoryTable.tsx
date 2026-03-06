@@ -61,7 +61,17 @@ export function LogHistoryTable({ logs, onDeleteDay }: LogHistoryTableProps) {
               <TableCell style={{ color: 'var(--text-muted)' }}>
                 {log.dayNumber}
               </TableCell>
-              <TableCell>{formatHistoryDate(log.date)}</TableCell>
+              <TableCell>
+                {(() => {
+                  const [dow, date] = formatHistoryDate(log.date).split(' ');
+                  return (
+                    <>
+                      <span style={{ display: 'inline-block', width: '2ch', minWidth: '2ch' }}>{dow}</span>
+                      {date}
+                    </>
+                  );
+                })()}
+              </TableCell>
               <TableCell className='text-right'>
                 {log.caloriesIn.toLocaleString()}
               </TableCell>
