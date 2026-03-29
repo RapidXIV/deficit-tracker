@@ -98,7 +98,7 @@ export function DayScreen({
     'var(--text-muted)';
 
   return (
-    <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe pb-safe">
+    <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe">
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between h-9 flex-shrink-0">
         {/* Left spacer — keeps date centered */}
@@ -387,11 +387,8 @@ export function DayScreen({
         </p>
       </div>
 
-      {/* Spacer */}
-      <div className="flex-1 min-h-0" />
-
       {/* ── Bottom buttons ── */}
-      <div className="flex flex-col gap-1.5 flex-shrink-0 pb-1">
+      <div className="flex flex-col gap-1.5 flex-shrink-0 mt-auto pt-6 pb-safe">
         {!isCurrentDayCompleted && (
           <Button variant="default" size="full" onClick={onFinishDay}>
             Finish Day
