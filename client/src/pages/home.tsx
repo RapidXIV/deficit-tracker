@@ -46,17 +46,6 @@ export function Home() {
     [settings, completedLogs]
   );
 
-  // Fade out splash once settings are done loading
-  useEffect(() => {
-    if (settingsLoading) return;
-    const splash = document.getElementById("splash");
-    if (!splash) return;
-    splash.style.opacity = "0";
-    splash.addEventListener("transitionend", () => splash.remove(), {
-      once: true,
-    });
-  }, [settingsLoading]);
-
   // Sticky day: once logs load, jump to the most recent logged date
   const stickySetRef = useRef(false);
   useEffect(() => {
