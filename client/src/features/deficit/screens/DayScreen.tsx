@@ -247,6 +247,30 @@ export function DayScreen({
                 />
               </div>
 
+              {/* Export Backup */}
+              <Button
+                variant="outline"
+                size="full"
+                onClick={() => {
+                  const data = {
+                    exportedAt: new Date().toISOString(),
+                    settings: JSON.parse(localStorage.getItem("deficit:settings") ?? "null"),
+                    logs: JSON.parse(localStorage.getItem("deficit:logs") ?? "[]"),
+                    liftingEntries: JSON.parse(localStorage.getItem("deficit:lifting:entries") ?? "[]"),
+                    liftingTemplate: JSON.parse(localStorage.getItem("deficit:lifting:template") ?? "[]"),
+                  };
+                  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `deficit-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                Export Backup
+              </Button>
+
               {/* Reset Goal */}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
