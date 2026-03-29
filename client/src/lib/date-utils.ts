@@ -47,6 +47,14 @@ export function formatShortDate(dateStr: string): string {
   return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
 }
 
+const DOW_ABBR = ["Su", "M", "T", "W", "Th", "F", "Sa"];
+
+// "T 3/5", "Th 3/7"
+export function formatHistoryDate(dateStr: string): string {
+  const d = parseLocal(dateStr);
+  return `${DOW_ABBR[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()}`;
+}
+
 // "Feb 21 '26"
 export function formatCompletionDate(date: Date): string {
   const yy = String(date.getFullYear()).slice(2);

@@ -1,6 +1,4 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import type { UserSettings, DailyLog } from "@shared/schema";
 import { playGong } from "@/lib/sounds";
 
@@ -10,6 +8,7 @@ interface UseCalorieTrackingProps {
   settings: UserSettings | null;
   logs: DailyLog[];
   isLogsLoaded: boolean;
+  upsertLog: (data: Omit<DailyLog, "id" | "userId">) => void;
   onDayFinished: () => void;
 }
 
@@ -19,21 +18,18 @@ export function useCalorieTracking({
   settings,
   logs,
   isLogsLoaded,
+  upsertLog,
   onDayFinished,
 }: UseCalorieTrackingProps) {
-  const qc = useQueryClient();
   const [caloriesIn, setCaloriesIn] = useState(0);
   const [caloriesOut, setCaloriesOut] = useState(0);
 
-  // Refs to always have latest values without stale closures
   const cInRef = useRef(0);
   const cOutRef = useRef(0);
   const logsRef = useRef(logs);
   const tdeeRef = useRef(dynamicTDEE);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
-  const revisionRef = useRef(0);
 
-  // Keep refs in sync
   useLayoutEffect(() => {
     logsRef.current = logs;
   });
@@ -56,12 +52,10 @@ export function useCalorieTracking({
   }, [date, isLogsLoaded]);
 
   const save = useCallback(
-    async (cIn: number, cOut: number, completed = false) => {
+    (cIn: number, cOut: number, completed = false) => {
       if (!settings) return;
 
-      const revision = ++revisionRef.current;
       const deficit = Math.round(tdeeRef.current) + cOut - cIn;
-
       const existing = logsRef.current.find((l) => l.date === date);
       const maxDay =
         logsRef.current.length > 0
@@ -69,25 +63,16 @@ export function useCalorieTracking({
           : 0;
       const dayNumber = existing?.dayNumber ?? maxDay + 1;
 
-      try {
-        await apiRequest("POST", "/api/logs", {
-          date,
-          caloriesIn: cIn,
-          caloriesOut: cOut,
-          deficit,
-          dayNumber,
-          completed: existing?.completed || completed,
-        });
-        if (revision === revisionRef.current) {
-          qc.setQueryData<DailyLog[]>(["/api/logs"], (prev = []) =>
-            prev.map(l => l.date === date ? { ...l, caloriesIn: cIn, caloriesOut: cOut, deficit } : l)
-          );
-        }
-      } catch {
-        // silent — user will see stale data but no error popup
-      }
+      upsertLog({
+        date,
+        caloriesIn: cIn,
+        caloriesOut: cOut,
+        deficit,
+        dayNumber,
+        completed: existing?.completed || completed,
+      });
     },
-    [date, settings, qc]
+    [date, settings, upsertLog]
   );
 
   const debouncedSave = useCallback(
@@ -146,26 +131,18 @@ export function useCalorieTracking({
         : 0;
     const dayNumber = existing?.dayNumber ?? maxDay + 1;
 
-    const optimisticLog: DailyLog = {
-      id: existing?.id ?? `optimistic-${date}`,
-      userId: existing?.userId ?? "",
+    upsertLog({
       date,
       caloriesIn: cIn,
       caloriesOut: cOut,
       deficit,
       dayNumber,
       completed: true,
-    };
-
-    qc.setQueryData<DailyLog[]>(["/api/logs"], (prev = []) => [
-      ...prev.filter((l) => l.date !== date),
-      optimisticLog,
-    ]);
+    });
 
     playGong();
     onDayFinished();
-    save(cIn, cOut, true); // fire-and-forget: server save + real refetch in background
-  }, [date, save, onDayFinished, qc]);
+  }, [date, upsertLog, onDayFinished]);
 
   const todayDeficit =
     Math.round(dynamicTDEE) + caloriesOut - caloriesIn;

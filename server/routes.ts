@@ -1,6 +1,7 @@
 import { Router, type Request } from "express";
 import { z } from "zod";
 import * as storage from "./storage";
+import { liftingExerciseSchema } from "../shared/schema";
 
 // ─── User identification ───────────────────────────────────────────────────────
 export function getUserId(req: Request): string | null {
@@ -158,6 +159,81 @@ apiRouter.delete("/logs", async (req, res) => {
 
   try {
     await storage.deleteAllLogs(userId);
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ─── Lifting ───────────────────────────────────────────────────────────────────
+
+const liftingEntrySchema = z.object({
+  exerciseName: z.string().min(1),
+  weight: z.number().min(0),
+  sets: z.number().int().min(0),
+  reps: z.number().int().min(0),
+});
+
+const liftingTemplateSchema = z.object({
+  exercises: z.array(liftingExerciseSchema),
+});
+
+// GET /api/lifting — all lifting entries for user
+apiRouter.get("/lifting", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const entries = await storage.getLiftingEntries(userId);
+    res.json(entries);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /api/lifting/entry — log one exercise entry for today
+apiRouter.post("/lifting/entry", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  const parsed = liftingEntrySchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
+  }
+
+  try {
+    const entry = await storage.addLiftingEntry(userId, parsed.data);
+    res.json(entry);
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /api/lifting/template — get saved exercise template
+apiRouter.get("/lifting/template", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const exercises = await storage.getLiftingTemplate(userId);
+    res.json({ exercises });
+  } catch {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /api/lifting/template — save exercise template
+apiRouter.post("/lifting/template", async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  const parsed = liftingTemplateSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: "Invalid data", details: parsed.error.flatten() });
+  }
+
+  try {
+    await storage.upsertLiftingTemplate(userId, parsed.data.exercises);
     res.json({ ok: true });
   } catch {
     res.status(500).json({ error: "Server error" });

@@ -1,40 +1,48 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { useState, useCallback } from "react";
 import type { UserSettings } from "@shared/schema";
 
+const LS_KEY = "deficit:settings";
+
+function load(): UserSettings | null {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? (JSON.parse(raw) as UserSettings) : null;
+  } catch {
+    return null;
+  }
+}
+
+function persist(s: UserSettings): void {
+  localStorage.setItem(LS_KEY, JSON.stringify(s));
+}
+
 export function useSettings() {
-  const qc = useQueryClient();
+  const [settings, setSettings] = useState<UserSettings | null>(load);
 
-  const { data: settings, isLoading } = useQuery<UserSettings | null>({
-    queryKey: ["/api/settings"],
-    queryFn: () =>
-      apiRequest<UserSettings>("GET", "/api/settings").catch((e: Error) => {
-        if (e.message === "No settings found") return null;
-        throw e;
-      }),
-  });
-
-  const saveMutation = useMutation({
-    mutationFn: (data: Omit<UserSettings, "id" | "userId">) =>
-      apiRequest<UserSettings>("POST", "/api/settings", data),
-    onSuccess: (updated) => {
-      qc.setQueryData(["/api/settings"], updated);
+  const saveSettings = useCallback(
+    async (data: Omit<UserSettings, "id" | "userId">) => {
+      const s: UserSettings = { id: "settings", userId: "local", ...data };
+      persist(s);
+      setSettings(s);
+      return s;
     },
-  });
+    []
+  );
 
-  const patchMutation = useMutation({
-    mutationFn: (data: { goalWeight: number }) =>
-      apiRequest<UserSettings>("PATCH", "/api/settings", data),
-    onSuccess: (updated) => {
-      qc.setQueryData(["/api/settings"], updated);
-    },
-  });
+  const patchGoalWeight = useCallback(async (data: { goalWeight: number }) => {
+    setSettings((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, goalWeight: data.goalWeight };
+      persist(updated);
+      return updated;
+    });
+  }, []);
 
   return {
-    settings: settings ?? null,
-    isLoading,
-    saveSettings: saveMutation.mutateAsync,
-    isSaving: saveMutation.isPending,
-    patchGoalWeight: patchMutation.mutateAsync,
+    settings,
+    isLoading: false,
+    saveSettings,
+    isSaving: false,
+    patchGoalWeight,
   };
 }

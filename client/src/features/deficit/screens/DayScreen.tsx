@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { LogOut, Settings, ChevronLeft, ChevronRight } from "lucide-react";
+import { Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -42,10 +42,9 @@ interface DayScreenProps {
   isCurrentDayCompleted: boolean;
   onNavigateDate: (date: string) => void;
   onShowHistory: () => void;
-  onLogout: () => void;
+  onShowLifting: () => void;
   onResetGoal: () => Promise<void>;
   onSaveGoalWeight: (weight: number) => Promise<void>;
-  username: string;
 }
 
 export function DayScreen({
@@ -63,13 +62,11 @@ export function DayScreen({
   isCurrentDayCompleted,
   onNavigateDate,
   onShowHistory,
-  onLogout,
+  onShowLifting,
   onResetGoal,
   onSaveGoalWeight,
-  username,
 }: DayScreenProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [resetConfirm, setResetConfirm] = useState(false);
   const [editingGoalWeight, setEditingGoalWeight] = useState(false);
   const [goalWeightInput, setGoalWeightInput] = useState(
     String(settings.goalWeight)
@@ -88,8 +85,6 @@ export function DayScreen({
     }
   }, [settingsOpen, settings.goalWeight]);
 
-  // Deficit flash: increment key on every change after initial mount so the
-  // CSS animation restarts from scratch (key change forces DOM remount)
   const isFirstRender = useRef(true);
   const [flashKey, setFlashKey] = useState(0);
   useEffect(() => {
@@ -104,19 +99,10 @@ export function DayScreen({
 
   return (
     <div className="h-[100dvh] flex flex-col max-w-md mx-auto px-4 overflow-hidden touch-none pt-safe pb-safe">
-      {/* ── Username ── */}
-      <p
-        className="text-center uppercase"
-        style={{ fontSize: 'var(--type-micro)', color: 'var(--text-muted)', letterSpacing: '0.04em' }}
-      >
-        {username}
-      </p>
-
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between h-9 flex-shrink-0">
-        <Button variant="ghost" size="icon" onClick={onLogout} aria-label="Log out">
-          <LogOut className="h-4 w-4" />
-        </Button>
+        {/* Left spacer — keeps date centered */}
+        <div className="w-9" />
 
         <div className="flex items-center gap-1">
           <Button
@@ -288,17 +274,6 @@ export function DayScreen({
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-
-              <Button
-                variant="outline"
-                size="full"
-                onClick={() => {
-                  setSettingsOpen(false);
-                  onLogout();
-                }}
-              >
-                Log Out
-              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -376,7 +351,6 @@ export function DayScreen({
         >
           Total Deficit
         </p>
-        {/* Micro-detail: 40px hairline rule — adds gravitas */}
         <div className="w-10 h-px mx-auto my-2" style={{ background: 'rgba(255,255,255,0.4)' }} />
         <p
           className="font-bold tabular-nums leading-tight tracking-[-0.02em]"
@@ -399,6 +373,9 @@ export function DayScreen({
             Finish Day
           </Button>
         )}
+        <Button variant="outline" size="full" onClick={onShowLifting}>
+          Lifting
+        </Button>
         <Button variant="outline" size="full" onClick={onShowHistory}>
           History
         </Button>

@@ -1,30 +1,63 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { useState, useCallback } from "react";
 import type { DailyLog } from "@shared/schema";
 
+const LS_KEY = "deficit:logs";
+
+function load(): DailyLog[] {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? (JSON.parse(raw) as DailyLog[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persist(logs: DailyLog[]): void {
+  localStorage.setItem(LS_KEY, JSON.stringify(logs));
+}
+
 export function useLogs() {
-  const qc = useQueryClient();
+  const [logs, setLogs] = useState<DailyLog[]>(load);
 
-  const { data: logs = [], isSuccess: isLogsLoaded } = useQuery<DailyLog[]>({
-    queryKey: ["/api/logs"],
-    queryFn: () => apiRequest<DailyLog[]>("GET", "/api/logs"),
-  });
+  const upsertLog = useCallback((data: Omit<DailyLog, "id" | "userId">) => {
+    setLogs((prev) => {
+      const existing = prev.find((l) => l.date === data.date);
+      let next: DailyLog[];
+      if (existing) {
+        next = prev.map((l) =>
+          l.date === data.date ? { ...l, ...data } : l
+        );
+      } else {
+        const newLog: DailyLog = {
+          id: crypto.randomUUID(),
+          userId: "local",
+          ...data,
+        };
+        next = [...prev, newLog];
+      }
+      persist(next);
+      return next;
+    });
+  }, []);
 
-  const resetDayMutation = useMutation({
-    mutationFn: (date: string) =>
-      apiRequest("DELETE", `/api/logs/${date}`),
-    onSettled: () => qc.invalidateQueries({ queryKey: ["/api/logs"] }),
-  });
+  const resetDay = useCallback(async (date: string) => {
+    setLogs((prev) => {
+      const next = prev.filter((l) => l.date !== date);
+      persist(next);
+      return next;
+    });
+  }, []);
 
-  const resetAllMutation = useMutation({
-    mutationFn: () => apiRequest("DELETE", "/api/logs"),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["/api/logs"] }),
-  });
+  const resetAll = useCallback(async () => {
+    persist([]);
+    setLogs([]);
+  }, []);
 
   return {
     logs,
-    isLogsLoaded,
-    resetDay: resetDayMutation.mutateAsync,
-    resetAll: resetAllMutation.mutateAsync,
+    isLogsLoaded: true,
+    upsertLog,
+    resetDay,
+    resetAll,
   };
 }

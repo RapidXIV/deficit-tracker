@@ -3,6 +3,7 @@ import {
   text,
   varchar,
   integer,
+  serial,
   real,
   boolean,
   timestamp,
@@ -60,6 +61,28 @@ export const dailyLogs = pgTable("daily_logs", {
   completed: boolean("completed").notNull().default(false),
 });
 
+// ─── lifting_logs ─────────────────────────────────────────────────────────────
+// One row per Add press — individual exercise entries
+export const liftingLogs = pgTable("lifting_logs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  date: text("date").notNull(),              // 'YYYY-MM-DD' — server's today at log time
+  exerciseName: text("exercise_name").notNull(),
+  weight: real("weight").notNull().default(0),
+  sets: integer("sets").notNull().default(0),
+  reps: integer("reps").notNull().default(0),
+  totalWork: real("total_work").notNull().default(0), // Joules
+  loggedAt: timestamp("logged_at").defaultNow(),
+});
+
+// ─── lifting_template ─────────────────────────────────────────────────────────
+// One row per user — persists the exercise list with last-used numbers
+export const liftingTemplate = pgTable("lifting_template", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().unique(),
+  exercises: jsonb("exercises").notNull().default([]), // LiftingExercise[]
+});
+
 // ─── Zod schemas (for API input validation) ────────────────────────────────────
 export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
   id: true,
@@ -68,6 +91,14 @@ export const insertDailyLogSchema = createInsertSchema(dailyLogs).omit({
   id: true,
 });
 
+export const liftingExerciseSchema = z.object({
+  name: z.string(),
+  weight: z.number().min(0), // lbs
+  sets: z.number().int().min(0),
+  reps: z.number().int().min(0),
+});
+export type LiftingExercise = z.infer<typeof liftingExerciseSchema>;
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
@@ -75,3 +106,4 @@ export type UserSettings = typeof userSettings.$inferSelect;
 export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 export type DailyLog = typeof dailyLogs.$inferSelect;
 export type InsertDailyLog = z.infer<typeof insertDailyLogSchema>;
+export type LiftingEntry = typeof liftingLogs.$inferSelect;
