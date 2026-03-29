@@ -62,7 +62,7 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
       </div>
 
       {/* ── Column headers ── */}
-      <div className="flex gap-1 items-center mt-2 mb-1 flex-shrink-0">
+      <div className="flex gap-0.5 items-center mt-2 mb-1 flex-shrink-0">
         <div className="w-12" /> {/* Add button column */}
         <div className="flex-1 uppercase tracking-[0.06em] font-medium" style={labelStyle}>
           Exercise
@@ -70,16 +70,16 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
         <div className="w-14 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
           Lbs
         </div>
-        <div className="w-11 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
+        <div className="w-9 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
           Sets
         </div>
-        <div className="w-11 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
+        <div className="w-9 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
           Reps
         </div>
-        <div className="w-12 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
+        <div className="w-10 text-right uppercase tracking-[0.06em] font-medium" style={labelStyle}>
           PR
         </div>
-        <div className="w-6" />
+        <div className="w-5" />
       </div>
 
       {/* ── Scrollable exercise list ── */}
@@ -88,7 +88,7 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
           {exercises.map((ex, i) => {
             const pr = ex.name.trim() ? prMap[ex.name.trim()] : undefined;
             return (
-              <div key={i} className="flex gap-1 items-center">
+              <div key={i} className="flex gap-0.5 items-center">
                 {/* Add button — leftmost */}
                 <Button
                   variant="default"
@@ -100,15 +100,15 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
                   Add
                 </Button>
                 <Input
-                  className="flex-1 h-8 text-xs"
-                  placeholder="Exercise name"
+                  className="flex-1 h-8 text-xs px-2"
+                  placeholder="Exercise"
                   value={ex.name}
                   onChange={(e) => updateExercise(i, "name", e.target.value)}
                 />
                 <Input
                   type="number"
                   inputMode="decimal"
-                  className="w-14 h-8 text-xs text-right"
+                  className="w-14 h-8 text-xs text-right px-1"
                   placeholder="0"
                   value={ex.weight || ""}
                   onChange={(e) =>
@@ -118,7 +118,7 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
                 <Input
                   type="number"
                   inputMode="numeric"
-                  className="w-11 h-8 text-xs text-right"
+                  className="w-9 h-8 text-xs text-center px-1"
                   placeholder="0"
                   value={ex.sets || ""}
                   onChange={(e) =>
@@ -128,7 +128,7 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
                 <Input
                   type="number"
                   inputMode="numeric"
-                  className="w-11 h-8 text-xs text-right"
+                  className="w-9 h-8 text-xs text-center px-1"
                   placeholder="0"
                   value={ex.reps || ""}
                   onChange={(e) =>
@@ -137,14 +137,14 @@ export function LiftingDayScreen({ onBack, onShowHistory }: LiftingDayScreenProp
                 />
                 {/* PR badge */}
                 <div
-                  className="w-12 text-right tabular-nums"
+                  className="w-10 text-right tabular-nums flex-shrink-0"
                   style={{ fontSize: '9px', color: 'var(--text-muted)' }}
                 >
                   {pr !== undefined ? `${pr}` : "—"}
                 </div>
                 <button
                   onClick={() => removeExercise(i)}
-                  className="w-6 flex items-center justify-center transition-colors"
+                  className="w-5 flex items-center justify-center transition-colors flex-shrink-0"
                   style={{ color: 'var(--text-muted)' }}
                   aria-label="Remove exercise"
                 >
