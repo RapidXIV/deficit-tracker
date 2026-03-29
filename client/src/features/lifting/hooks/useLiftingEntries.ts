@@ -64,5 +64,10 @@ export function useLiftingEntries() {
     []
   );
 
-  return { entries, prMap, addEntry };
+  const clearEntries = useCallback(() => {
+    localStorage.setItem(LS_KEY, JSON.stringify([]));
+    setEntries([]);
+  }, []);
+
+  return { entries, prMap, addEntry, clearEntries };
 }
